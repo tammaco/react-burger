@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import AppHeader from './components/AppHeader/AppHeader';
+import BurgerIngredients from './components/BurgerIngredients/BurgerIngredients'
+import BurgerConstructor from './components/BurgerConstructor/BurgerConstructor'
+
+const apiurl = 'https://norma.nomoreparties.space/api/'
 
 function App() {
+
+  const [data, setData] = useState(null);
+  const getData = () => {
+    
+    fetch(apiurl + 'ingredients')
+      .then(res => res.json())
+      .then(data => {
+        setData(data);
+      })
+      .catch(e => {
+        console.log("error", e);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <AppHeader />
+      <div className='main_content'>
+        <BurgerIngredients data={data}/>
+        <BurgerConstructor data={data}/>
+      </div>
+    </>
   );
 }
 

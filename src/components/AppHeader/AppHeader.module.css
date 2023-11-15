@@ -1,0 +1,35 @@
+.layout {
+    width: 1920px;
+    height: 88px;
+    padding-top: 40px;
+    padding-left: 40px;
+}
+
+.content{
+    width: 1280px;
+    height: 56px;
+    padding-top: 16px;
+    padding-left: 320px;
+    display: flex;
+}
+
+.nav_link {
+    display: flex;
+    width: 197px;
+    height: 56px;
+    padding: 16px 20px 16px 20px;
+    border-radius: 40px;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.nav_link_name {
+    width: 125px;
+    height: 24px;
+    color: #8585AD;
+}
+
+.nav_link_name_acitve {
+    composes: nav_link_name;
+    color: #F2F2F3;
+}

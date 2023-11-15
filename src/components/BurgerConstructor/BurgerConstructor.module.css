@@ -1,0 +1,40 @@
+.layout {
+    width: 600px;
+    height: 912px;
+    padding-top: 128px;
+    padding-left: 40px;
+}
+
+.components{
+  display: flex; 
+  flex-direction: column;
+  gap: 10px;
+  width: 568px;
+  height: 656px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.components::-webkit-scrollbar {
+    width: 8px;
+}
+  
+  
+.components::-webkit-scrollbar-thumb {
+    background: linear-gradient(0deg, #4C4CFF, #4C4CFF)
+}
+
+.order_info{
+  height: 64px;
+  padding-top: 40px;
+  gap: 40px;
+  display: flex; 
+  justify-content: flex-end;
+}
+
+.price{
+  height: 64px;
+  gap: 8px;
+  display: flex; 
+  align-items: center;
+}
