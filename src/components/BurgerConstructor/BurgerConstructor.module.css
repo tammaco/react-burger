@@ -5,14 +5,20 @@
     padding-left: 40px;
 }
 
+.bun{
+  padding-left: 20px;
+}
+
 .components{
   display: flex; 
   flex-direction: column;
   gap: 10px;
   width: 568px;
-  height: 656px;
+  height: 450px;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .components::-webkit-scrollbar {

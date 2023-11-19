@@ -6,7 +6,7 @@ import styles from './AppHeader.module.css';
 function AppHeader(props) {
 
   return (
-        <section className={styles.layout}>
+        <header className={styles.layout}>
          <div className={styles.content}>
           
           <div className={styles.nav_link} >
@@ -25,7 +25,7 @@ function AppHeader(props) {
           
           <Logo/>  
 
-          <div className={styles.nav_link} value='profile' style={{left: '1273px', position: 'absolute'}}>
+          <div className={styles.nav_link_last} value='profile'>
             <ProfileIcon type="secondary"/>
             <div className={styles.nav_link_name}>
               <p className="text text_type_main-small">Личный кабинет</p>
@@ -33,7 +33,7 @@ function AppHeader(props) {
           </div>
 
          </div>
-        </section>
+        </header>
       );
     }
 

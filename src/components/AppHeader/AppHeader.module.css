@@ -1,5 +1,5 @@
 .layout {
-    width: 1920px;
+    width: 1320px;
     height: 88px;
     padding-top: 40px;
     padding-left: 40px;
@@ -9,7 +9,6 @@
     width: 1280px;
     height: 56px;
     padding-top: 16px;
-    padding-left: 320px;
     display: flex;
 }
 
@@ -21,6 +20,12 @@
     border-radius: 40px;
     gap: 8px;
     cursor: pointer;
+}
+
+.nav_link_last {
+    composes: nav_link;
+    left: 1073px; 
+    position: absolute;
 }
 
 .nav_link_name {
