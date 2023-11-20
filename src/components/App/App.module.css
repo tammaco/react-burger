@@ -39,6 +39,7 @@
   
   .main_content{
     display: flex;
-    width: 1240px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   

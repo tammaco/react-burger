@@ -1,12 +1,12 @@
 import React from 'react'
 import styles from './BurgerConstructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
-import PropTypes from 'prop-types';
+import ingredientType from '../../utils/types'
 
 function BurgerConstructor(props) {
 
     const components = props.data;
-    const bun = components?.data?.filter(x => x.type == 'bun')[0];
+    const bun = components?.data?.filter(x => x.type === 'bun')[0];
 
     return (
         <section className={styles.layout}>
@@ -21,7 +21,7 @@ function BurgerConstructor(props) {
                     </div>
                     <div className={styles.components}>
                         {components.data.map((item, index) => 
-                        item.type != 'bun' && (<div key={item._id}>
+                        item.type !== 'bun' && (<div key={item._id}>
                             <DragIcon type="primary" />
                             <ConstructorElement
                                 isLocked={false}
@@ -47,23 +47,6 @@ function BurgerConstructor(props) {
     )
 }
 
-BurgerConstructor.propTypes = {
-    data: PropTypes.shape({
-        success: PropTypes.bool,
-        data: PropTypes.arrayOf(PropTypes.shape({
-                _id: PropTypes.string,
-                type: PropTypes.string,
-                name: PropTypes.string,
-                price: PropTypes.number,
-                calories: PropTypes.number,
-                carbohydrates: PropTypes.number,
-                fat: PropTypes.number,
-                proteins: PropTypes.number,
-                image: PropTypes.string,
-                image_large: PropTypes.string,
-                image_mobile: PropTypes.string,
-            }))
-    })
-};
+BurgerConstructor.propTypes = ingredientType;
 
 export default BurgerConstructor;

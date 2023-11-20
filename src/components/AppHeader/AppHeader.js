@@ -6,8 +6,7 @@ import styles from './AppHeader.module.css';
 function AppHeader(props) {
 
   return (
-        <header className={styles.layout}>
-         <div className={styles.content}>
+        <header className={styles.content}>
           
           <div className={styles.nav_link} >
             <BurgerIcon type="primary"/>
@@ -32,7 +31,6 @@ function AppHeader(props) {
             </div>
           </div>
 
-         </div>
         </header>
       );
     }

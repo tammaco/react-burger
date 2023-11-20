@@ -1,15 +1,10 @@
-.layout {
-    width: 1320px;
-    height: 88px;
-    padding-top: 40px;
-    padding-left: 40px;
-}
-
 .content{
-    width: 1280px;
     height: 56px;
     padding-top: 16px;
     display: flex;
+    justify-content: center;
+    padding-left: 160px;
+    padding-right: 160px;
 }
 
 .nav_link {
@@ -24,8 +19,7 @@
 
 .nav_link_last {
     composes: nav_link;
-    left: 1073px; 
-    position: absolute;
+    margin-left: auto;
 }
 
 .nav_link_name {

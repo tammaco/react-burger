@@ -13,7 +13,7 @@ function IngredientItem(props) {
                     <CurrencyIcon type="primary" />
                 </div>
                 <div className={styles.ingredient_item_name}>
-                    <p className="text text_type_main-small" style={{textAlign: 'center'}}>{props.data.name}</p>
+                    <p className="text text_type_main-small">{props.data.name}</p>
                 </div>
             </div>
     )
