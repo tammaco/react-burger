@@ -15,17 +15,16 @@ function App() {
     fetch(apiurl + 'ingredients')
       .then(res =>
         {
-          if (res.ok) {
+          if (res.ok) 
               return res.json();
-          }
           return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then(data => {
-        setData(data);
-      })
-      .catch(e => {
-        console.log("error", e);
-      });
+        })
+        .then(data => {
+          setData(data);
+        })
+        .catch(e => {
+          console.log("error", e);
+        });
   };
 
   useEffect(() => {

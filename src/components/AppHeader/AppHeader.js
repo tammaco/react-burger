@@ -1,14 +1,12 @@
 import React from 'react'
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-
 import styles from './AppHeader.module.css';
 
 function AppHeader(props) {
 
   return (
         <header className={styles.content}>
-          
-          <div className={styles.nav_link} >
+          <div className={styles.nav_link}>
             <BurgerIcon type="primary"/>
             <div className={styles.nav_link_name_acitve}>
               <p className="text text_type_main-small">Конструктор</p>

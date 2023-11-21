@@ -1,5 +1,5 @@
 import React from 'react'
-import ingredientType from '../../utils/types'
+import { ingredientType } from '../../utils/types'
 
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -49,7 +49,7 @@ function BurgerIngredients(props) {
                         ingredients.data.filter(item => item.type === tab.type)
                           .map((item, index) => 
                           <div className={index % 2 === 0 ? 'pl-4' : 'pl-6'} key={item._id}>
-                            <IngredientItem data={item} />
+                            <IngredientItem item={item} />
                           </div>
                           )
                       }

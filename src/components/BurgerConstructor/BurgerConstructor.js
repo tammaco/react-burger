@@ -1,12 +1,20 @@
 import React from 'react'
 import styles from './BurgerConstructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
-import ingredientType from '../../utils/types'
+import { ingredientType } from '../../utils/types'
+import  Modal from '../Modal/Modal'
+import OrderDetails from '../OrderDetails/OrderDetails'
 
 function BurgerConstructor(props) {
 
     const components = props.data;
     const bun = components?.data?.filter(x => x.type === 'bun')[0];
+
+    const [isOpenOrderDetails, setIsOpenOrderDetails] = React.useState(false);
+
+    const handleClick = () => {      
+        setIsOpenOrderDetails(!isOpenOrderDetails);
+    };
 
     return (
         <section className={styles.layout}>
@@ -41,8 +49,11 @@ function BurgerConstructor(props) {
                     <p className="text text_type_digits-default">610</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large">Оформить заказ</Button>
+                <Button htmlType="button" type="primary" size="large" onClick={handleClick}>Оформить заказ</Button>
              </div>
+             {isOpenOrderDetails && 
+                    <Modal isOpen={isOpenOrderDetails}  onClose={() => setIsOpenOrderDetails(false)} 
+                        header='' children={(<OrderDetails />)} />}
         </section>
     )
 }
