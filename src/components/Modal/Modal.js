@@ -6,36 +6,39 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { createPortal } from 'react-dom';
 
-function Modal ({isOpen, onClose, header, children})  {
+function Modal ({onClose, header, children})  {
     const modalRoot = document.getElementById("react-modals");
+    
 
     React.useEffect(() => {
-        const closeOnEscapeKey = (event) => {
+        const handleEscapeKey = (event) => {
             event.preventDefault();
-            if (event.key === 'Escape') onClose()
+            if (event.key === 'Escape') onClose();
         }
 
-        document.body.addEventListener('keydown', closeOnEscapeKey)
+        document.body.addEventListener('keydown', handleEscapeKey)
 
-        return () => document.body.removeEventListener('keydown', closeOnEscapeKey)
+        return () => {
+            document.body.removeEventListener('keydown', handleEscapeKey);
+        }
     }, [onClose])
 
-    const modalContent = isOpen ? (
+    const modalContent = (
         <>
             <div className={styles.modal}>
               <div className={styles.modal_header}>
                 <div className={styles.modal_title}>
                     <p className="text text_type_main-large">{header}</p>
                 </div>
-                <span className={styles.modal_close_btn}>
+                <div className={styles.modal_close_btn}>
                     <CloseIcon type="primary" onClick={onClose} />
-                </span>
+                </div>
               </div>
               {children}
           </div>
-          <ModalOverlay onClose={onClose} />
+          <ModalOverlay onClose={() => onClose()}></ModalOverlay>
         </>
-    ) : null;
+    );
 
     return createPortal(
         modalContent,
@@ -45,7 +48,6 @@ function Modal ({isOpen, onClose, header, children})  {
 
 Modal.propTypes = {
     header: PropTypes.string,
-    isOpen: PropTypes.bool,   
     onClose: PropTypes.func,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),

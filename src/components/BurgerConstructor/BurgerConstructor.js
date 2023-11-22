@@ -52,8 +52,9 @@ function BurgerConstructor(props) {
                 <Button htmlType="button" type="primary" size="large" onClick={handleClick}>Оформить заказ</Button>
              </div>
              {isOpenOrderDetails && 
-                    <Modal isOpen={isOpenOrderDetails}  onClose={() => setIsOpenOrderDetails(false)} 
-                        header='' children={(<OrderDetails />)} />}
+                    <Modal onClose={() => setIsOpenOrderDetails(false)}>
+                        <OrderDetails />
+                    </Modal>}
         </section>
     )
 }

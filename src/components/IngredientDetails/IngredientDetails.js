@@ -1,7 +1,9 @@
 import styles from './IngredientDetails.module.css';
 import { ingredientItem } from '../../utils/types'
 
-function IngredientDetails ({item}){
+function IngredientDetails (props) {
+    const item = props.children;
+
     return (<div className={styles.content}>
         <img src={item.image_large} alt={item.name}></img>
         <div className={styles.ingredient_name}>
@@ -29,7 +31,7 @@ function IngredientDetails ({item}){
 }
 
 IngredientDetails.propTypes = {
-    item: ingredientItem
+    children: ingredientItem
 }
 
 export default IngredientDetails;
