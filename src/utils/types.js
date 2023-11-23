@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
 
 export const ingredientItem = PropTypes.shape({
-    _id: PropTypes.string,
-    type: PropTypes.string,
-    name: PropTypes.string,
-    price: PropTypes.number,
-    calories: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    fat: PropTypes.number,
-    proteins: PropTypes.number,
-    image: PropTypes.string,
-    image_large: PropTypes.string,
+    _id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    calories: PropTypes.number.isRequired,
+    carbohydrates: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    proteins: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    image_large: PropTypes.string.isRequired,
     image_mobile: PropTypes.string,
 });
 
 export  const ingredientType = {
     data: PropTypes.shape({
-        success: PropTypes.bool,
-        data: PropTypes.arrayOf(ingredientItem)
+        success: PropTypes.bool.isRequired,
+        data: PropTypes.arrayOf(ingredientItem).isRequired
     })
 };

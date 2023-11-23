@@ -48,11 +48,11 @@ function Modal ({onClose, header, children})  {
 
 Modal.propTypes = {
     header: PropTypes.string,
-    onClose: PropTypes.func,
+    onClose: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node
-    ])
+    ]).isRequired
 };
 
 export default Modal;
