@@ -4,12 +4,13 @@ import AppHeader from '../AppHeader/AppHeader';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import BurgerIngredients from '../BurgerIngredients/BurgerIngredients'
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor'
-
-const apiurl = 'https://norma.nomoreparties.space/api/'
+import { IngredientsContext } from '../../services/appContext'
+import { apiurl } from '../../services/api'
 
 function App() {
 
   const [data, setData] = useState(null);
+
   const getData = () => {
     
     fetch(apiurl + 'ingredients')
@@ -20,7 +21,10 @@ function App() {
           return Promise.reject(`Ошибка ${res.status}`);
         })
         .then(data => {
-          setData(data);
+          if (data.success && data.data !== null && data.data.length)
+            setData(data.data);
+          else
+            console.log("Неудачная попытка получения ингредиентов");
         })
         .catch(e => {
           console.log("error", e);
@@ -34,10 +38,12 @@ function App() {
   return (
     <ErrorBoundary>
       <AppHeader />
-      <main className={styles.main_content}>
-        <BurgerIngredients data={data}/>
-        <BurgerConstructor data={data}/>
-      </main>
+      <IngredientsContext.Provider value={data}>
+        <main className={styles.main_content}>
+          <BurgerIngredients />
+          <BurgerConstructor />
+        </main>
+      </IngredientsContext.Provider>
     </ErrorBoundary>
   );
 }

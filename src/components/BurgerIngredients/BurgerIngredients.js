@@ -1,16 +1,15 @@
 import React from 'react'
-import { ingredientType } from '../../utils/types'
 
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 
-
+import { IngredientsContext } from '../../services/appContext'
 import IngredientItem from '../IngredientItem/IngredientItem'
 
 function BurgerIngredients(props) {
 
   const [current, setCurrent] = React.useState('bun');
-  const ingredients = props.data;
+  const ingredients = React.useContext(IngredientsContext);
 
   const tabs = [
     { id: 1, name: "Булки", type: 'bun' },
@@ -34,8 +33,6 @@ function BurgerIngredients(props) {
         <div className={styles.ingredients}>
         {
           ingredients
-           && ingredients.success
-           && ingredients.data.length
            && (
             <>
               {
@@ -46,7 +43,7 @@ function BurgerIngredients(props) {
                     </div>
                     <div className={styles.columns}>
                       {
-                        ingredients.data.filter(item => item.type === tab.type)
+                        ingredients.filter(item => item.type === tab.type)
                           .map((item, index) => 
                           <div className={index % 2 === 0 ? 'pl-4' : 'pl-6'} key={item._id}>
                             <IngredientItem>{item}</IngredientItem>
@@ -64,7 +61,5 @@ function BurgerIngredients(props) {
     </section>
   )
 }
-
-BurgerIngredients.propTypes = ingredientType;
 
 export default BurgerIngredients;

@@ -8,7 +8,6 @@ import { createPortal } from 'react-dom';
 
 function Modal ({onClose, header, children})  {
     const modalRoot = document.getElementById("react-modals");
-    
 
     React.useEffect(() => {
         const handleEscapeKey = (event) => {
