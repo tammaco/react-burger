@@ -1,38 +1,25 @@
 import React from 'react'
 import styles from './OrderDetails.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { apiurl } from '../../services/api'
+import request from '../../utils/request'
 import PropTypes from 'prop-types';
 
-function OrderDetails (props) {
+function OrderDetails ({ orderItemIds }) {
 
     const [orderNumber, setOrderNumber] = React.useState(null);
 
     const getOrderNumber = () => {
-        fetch(apiurl + 'orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            body: JSON.stringify({ 'ingredients': props.children })
-          })
-          .then(res =>
-            {
-              if (res.ok) 
-                  return res.json();
-              return Promise.reject(`Ошибка ${res.status}`);
-            })
+        request('orders', { method: 'POST', headers: { 'Content-Type': 'application/json;charset=utf-8' }
+            , body: JSON.stringify({ 'ingredients': orderItemIds})})
             .then(data => {
               if (data.success && data.order !== null && data.order.number)
                 setOrderNumber(data.order.number);
               else
-                console.log("Неудачная попытка получения номера заказа");
-            })
-            .catch(e => {
-              console.log("error", e);
-            });
+                console.error("Неудачная попытка получения номера заказа");
+            }).catch(console.error);
       };
 
     React.useEffect(
-      
         () => { getOrderNumber(); }, []
     );
 
@@ -51,6 +38,8 @@ function OrderDetails (props) {
     )
 }
 
-OrderDetails.propTypes = PropTypes.arrayOf(PropTypes.string);
+OrderDetails.propTypes = {
+    orderItemIds: PropTypes.arrayOf(PropTypes.string)
+}
 
 export default OrderDetails;

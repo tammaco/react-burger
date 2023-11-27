@@ -1,1 +1,0 @@
-export const apiurl = 'https://norma.nomoreparties.space/api/'

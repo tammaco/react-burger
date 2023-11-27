@@ -1,9 +1,11 @@
 import React from 'react'
 import styles from './BurgerConstructor.module.css';
-import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import  { useModal } from '../../hooks/useModal'
 import  Modal from '../Modal/Modal'
 import OrderDetails from '../OrderDetails/OrderDetails'
 import { IngredientsContext, TotalCostContext } from '../../services/appContext'
+import ConstructorItem from '../ConstructorItem/ConstructorItem'
 
 const totalCostInitialState = { cost: null }; 
 
@@ -21,65 +23,52 @@ function reducer(state, action) {
 function BurgerConstructor(props) {
 
     const ingredients = React.useContext(IngredientsContext);
-    const [isOpenOrderDetails, setIsOpenOrderDetails] = React.useState(false);
+    const [bun, setBun] = React.useState(null);
     const [orderItems, setOrderItems] = React.useState(null);
     const [orderItemIds, setOrderItemIds] = React.useState(null);
     const [totalCost, totalCostDispatcher] = React.useReducer(reducer, totalCostInitialState);
-    
+
+    const { isModalOpen, openModal, closeModal } = useModal();
+
     const itemsLength = 5;
 
     React.useEffect(
         () => {
             if (ingredients && ingredients.length)
             {
-                let randomComponents = [];
                 let buns = ingredients.filter(x => x.type === 'bun');
                 const randomBunIndex = Math.floor(Math.random() * buns.length);
-                const bun = buns[randomBunIndex];
-                //булка сверху
-                randomComponents.push(bun);
+                setBun(buns[randomBunIndex]);
 
                 let items = ingredients.filter(x => x.type !== 'bun');
-                const shuffled = items.sort(() => 0.5 - Math.random());
-                randomComponents = randomComponents.concat(shuffled.slice(0, itemsLength));
+                const shuffled = items.sort(() => 0.5 - Math.random()).slice(0, itemsLength);
 
-                //булка снизу
-                randomComponents.push(bun);
 
-                setOrderItems(randomComponents);
-                setOrderItemIds(randomComponents.map(function(item) { return item._id; }));
-                const cost = randomComponents.reduce(function (a, b) { return a + parseInt(b.price) }, 0);
+                setOrderItems(shuffled);
+                setOrderItemIds(shuffled.map(function(item) { return item._id; }));
+                const cost = shuffled.reduce(function (a, b) { return a + parseInt(b.price) }, 0);
                 totalCostDispatcher({type: 'set', totalCost: cost});
             }
         },
-        [ingredients, setOrderItems, setOrderItemIds]
+        [ingredients, setBun, setOrderItems, setOrderItemIds]
     );
-
-    const handleClick = () => {      
-        setIsOpenOrderDetails(!isOpenOrderDetails);
-    };
 
     return (
         <section className={styles.layout}>
                 {
                     orderItems && orderItems.length
                     && (
-                            <div className={styles.components}>
-                                {orderItems.map((item, index) => {
-                                    let isBun = index === 0 || index === itemsLength + 1;
-                                    return (
-                                        <div key={index} className={isBun ? styles.bun : ''}>
-                                            {(!isBun && <DragIcon type="primary" />)}
-                                            <ConstructorElement  key={index}
-                                                type={index === 0 ? 'top' : index === itemsLength + 1 ? 'bottom' : ''}
-                                                isLocked={isBun ? true : false}
-                                                text={item.name + (index === 0 ? ' верх' : index === itemsLength + 1 ? ' низ' : '')}
-                                                price={item.price}
-                                                thumbnail={item.image} />
-                                        </div>
-                                    )
-                                })}
+                        <>
+                            <div className={styles.bun}>
+                                <ConstructorElement type='top' isLocked={true} text={bun.name + ' (верх)'} price={bun.price} thumbnail={bun.image} />
                             </div>
+                            <div className={styles.components}>
+                                {orderItems.map((item, index) => (<div key={index}><ConstructorItem item={item}></ConstructorItem></div>)) }
+                            </div>
+                            <div className={styles.bun}>
+                                <ConstructorElement type='bottom' isLocked={true} text={bun.name + ' (низ)'} price={bun.price} thumbnail={bun.image} />
+                            </div>
+                        </>
                         )
                 }
                 <TotalCostContext.Provider value={{ totalCost }}>
@@ -88,12 +77,12 @@ function BurgerConstructor(props) {
                             <p className="text text_type_digits-default">{totalCost.cost}</p>
                             <CurrencyIcon type="primary" />
                         </div>
-                        <Button htmlType="button" type="primary" size="large" onClick={handleClick}>Оформить заказ</Button>
+                        <Button htmlType="button" type="primary" size="large" onClick={openModal}>Оформить заказ</Button>
                     </div>
                 </TotalCostContext.Provider>
-                {isOpenOrderDetails && orderItemIds &&
-                        <Modal onClose={() => setIsOpenOrderDetails(false)}>
-                            <OrderDetails>{orderItemIds}</OrderDetails>
+                {isModalOpen && orderItemIds &&
+                        <Modal onClose={closeModal}>
+                            <OrderDetails orderItemIds={orderItemIds} />
                         </Modal>}
         </section>
     )

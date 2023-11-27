@@ -4,18 +4,15 @@ import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-c
 import { ingredientItem } from '../../utils/types'
 import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import  Modal from '../Modal/Modal'
+import  { useModal } from '../../hooks/useModal'
 
 function IngredientItem(props) {
     const item = props.children;
-    const [isOpenDetails, setIsOpenDetails] = React.useState(false);
-
-    const handleClick = () => {   
-        setIsOpenDetails(!isOpenDetails);
-    };
+    const { isModalOpen, openModal, closeModal } = useModal();
 
     return (
         <>
-            <div className={styles.ingredient_item_content} onClick={handleClick}>
+            <div className={styles.ingredient_item_content} onClick={openModal}>
                 <Counter count={1} size="default" extraClass="m-1" />
                 <img src={item.image} alt={item.name}></img>
                 <div className={styles.ingredient_item_price}>
@@ -26,8 +23,8 @@ function IngredientItem(props) {
                     <p className="text text_type_main-small">{item.name}</p>
                 </div>
             </div>
-            {isOpenDetails && 
-                    <Modal onClose={() => setIsOpenDetails(false)} header='Детали ингредиента'>
+            {isModalOpen && 
+                    <Modal onClose={closeModal} header='Детали ингредиента'>
                         <IngredientDetails>{item}</IngredientDetails>
                     </Modal>
                 }
