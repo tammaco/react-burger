@@ -6,8 +6,7 @@ import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import  Modal from '../Modal/Modal'
 import  { useModal } from '../../hooks/useModal'
 
-function IngredientItem(props) {
-    const item = props.children;
+function IngredientItem({item}) {
     const { isModalOpen, openModal, closeModal } = useModal();
 
     return (

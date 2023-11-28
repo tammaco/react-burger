@@ -46,7 +46,7 @@ function BurgerIngredients(props) {
                         ingredients.filter(item => item.type === tab.type)
                           .map((item, index) => 
                           <div className={index % 2 === 0 ? 'pl-4' : 'pl-6'} key={item._id}>
-                            <IngredientItem>{item}</IngredientItem>
+                            <IngredientItem item={item} />
                           </div>
                           )
                       }
