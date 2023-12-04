@@ -4,86 +4,69 @@ import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-de
 import  { useModal } from '../../hooks/useModal'
 import  Modal from '../Modal/Modal'
 import OrderDetails from '../OrderDetails/OrderDetails'
-import { IngredientsContext, TotalCostContext } from '../../services/appContext'
 import ConstructorItem from '../ConstructorItem/ConstructorItem'
+import BunContainer from '../BunContainer/BunContainer'
 
-const totalCostInitialState = { cost: null }; 
+import { useSelector } from 'react-redux'
+import { getConstructorItems, addBun, addItem } from '../../services/slices/BurgerConstructor';
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "set":
-      return { cost: action.totalCost };
-    case "reset":
-      return totalCostInitialState;
-    default:
-      throw new Error(`Wrong type of action: ${action.type}`);
-  }
-}
+import { useDrop } from 'react-dnd'
 
 function BurgerConstructor(props) {
 
-    const ingredients = React.useContext(IngredientsContext);
-    const [bun, setBun] = React.useState(null);
-    const [orderItems, setOrderItems] = React.useState(null);
-    const [orderItemIds, setOrderItemIds] = React.useState(null);
-    const [totalCost, totalCostDispatcher] = React.useReducer(reducer, totalCostInitialState);
+    const items =  useSelector(getConstructorItems);
+
+    const [{ isHover }, dropItem] = useDrop({
+        accept: "item",
+        collect: monitor => ({
+            isHover: monitor.isOver(),
+        }),
+        drop(item) {
+            addItem(item);
+        },
+    });
 
     const { isModalOpen, openModal, closeModal } = useModal();
-
-    const itemsLength = 5;
-
-    React.useEffect(
-        () => {
-            if (ingredients && ingredients.length)
-            {
-                let buns = ingredients.filter(x => x.type === 'bun');
-                const randomBunIndex = Math.floor(Math.random() * buns.length);
-                setBun(buns[randomBunIndex]);
-
-                let items = ingredients.filter(x => x.type !== 'bun');
-                const shuffled = items.sort(() => 0.5 - Math.random()).slice(0, itemsLength);
-
-
-                setOrderItems(shuffled);
-                setOrderItemIds(shuffled.map(function(item) { return item._id; }));
-                const cost = shuffled.reduce(function (a, b) { return a + parseInt(b.price) }, 0);
-                totalCostDispatcher({type: 'set', totalCost: cost});
-            }
-        },
-        [ingredients, setBun, setOrderItems, setOrderItemIds]
-    );
 
     return (
         <section className={styles.layout}>
                 {
-                    orderItems && orderItems.length
-                    && (
+                    items.length > 0 ?
+                    (
                         <>
-                            <div className={styles.bun}>
+                            {/* <div className={styles.bun}>
                                 <ConstructorElement type='top' isLocked={true} text={bun.name + ' (верх)'} price={bun.price} thumbnail={bun.image} />
                             </div>
                             <div className={styles.components}>
-                                {orderItems.map((item, index) => (<div key={index}><ConstructorItem item={item}></ConstructorItem></div>)) }
+                                {ingredients.map((item, index) => (<div key={index}><ConstructorItem item={item}></ConstructorItem></div>)) }
                             </div>
                             <div className={styles.bun}>
                                 <ConstructorElement type='bottom' isLocked={true} text={bun.name + ' (низ)'} price={bun.price} thumbnail={bun.image} />
-                            </div>
+                            </div> */}
                         </>
-                        )
+                    )
+                    : (
+                        <>
+                        <div className={styles.components}>
+                        <BunContainer pos="top"></BunContainer>
+                            
+                            <div className="constructor-element" ref={dropItem}>
+                                <span className="constructor-element__row"><span className="constructor-element__text">Начинка</span></span>
+                            </div>
+                            
+                            <BunContainer pos="bottom"></BunContainer>
+                        </div>
+                        </>
+                    )
                 }
-                <TotalCostContext.Provider value={{ totalCost }}>
-                    <div className={styles.order_info}>
+                <div className={styles.order_info}>
                         <div className={styles.price}>
-                            <p className="text text_type_digits-default">{totalCost.cost}</p>
+                            <p className="text text_type_digits-default">{777}</p>
                             <CurrencyIcon type="primary" />
                         </div>
                         <Button htmlType="button" type="primary" size="large" onClick={openModal}>Оформить заказ</Button>
-                    </div>
-                </TotalCostContext.Provider>
-                {isModalOpen && orderItemIds &&
-                        <Modal onClose={closeModal}>
-                            <OrderDetails orderItemIds={orderItemIds} />
-                        </Modal>}
+                </div>
+                {isModalOpen && <Modal onClose={closeModal}><OrderDetails orderItemIds={[]} /></Modal>}
         </section>
     )
 }

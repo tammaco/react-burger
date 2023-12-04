@@ -11,12 +11,7 @@ function OrderDetails ({ orderItemIds }) {
     const getOrderNumber = () => {
         request('orders', { method: 'POST', headers: { 'Content-Type': 'application/json;charset=utf-8' }
             , body: JSON.stringify({ 'ingredients': orderItemIds})})
-            .then(data => {
-              if (data.success && data.order !== null && data.order.number)
-                setOrderNumber(data.order.number);
-              else
-                console.error("Неудачная попытка получения номера заказа");
-            }).catch(console.error);
+            .then(data =>  setOrderNumber(data.order.number));
       };
 
     React.useEffect(

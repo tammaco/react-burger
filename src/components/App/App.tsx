@@ -4,36 +4,21 @@ import AppHeader from '../AppHeader/AppHeader';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import BurgerIngredients from '../BurgerIngredients/BurgerIngredients'
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor'
-import { IngredientsContext } from '../../services/appContext'
-import request from '../../utils/request'
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
-
-  const [data, setData] = useState(null);
-
-  const getData = () => {
-    request('ingredients', {})
-      .then(data => {
-        if (data.success && data.data !== null && data.data.length)
-          setData(data.data);
-        else
-          console.error("Неудачная попытка получения ингредиентов");
-      }).catch(console.error);
-  };
-
-  useEffect(() => {
-    getData();
-  }, [])
 
   return (
     <ErrorBoundary>
       <AppHeader />
-      <IngredientsContext.Provider value={data}>
+      <DndProvider backend={HTML5Backend}>
         <main className={styles.main_content}>
           <BurgerIngredients />
           <BurgerConstructor />
         </main>
-      </IngredientsContext.Provider>
+      </DndProvider>
     </ErrorBoundary>
   );
 }

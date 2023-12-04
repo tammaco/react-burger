@@ -3,13 +3,15 @@ import React from 'react'
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { IngredientsContext } from '../../services/appContext'
 import IngredientItem from '../IngredientItem/IngredientItem'
+
+import { useGetIngredientsQuery } from '../../hooks/useApi'
 
 function BurgerIngredients(props) {
 
   const [current, setCurrent] = React.useState('bun');
-  const ingredients = React.useContext(IngredientsContext);
+
+  const { data: ingredients = [], isSuccess, isError, isLoading } = useGetIngredientsQuery();
 
   const tabs = [
     { id: 1, name: "Булки", type: 'bun' },
@@ -32,7 +34,7 @@ function BurgerIngredients(props) {
         </div>
         <div className={styles.ingredients}>
         {
-          ingredients
+          isSuccess
            && (
             <>
               {
