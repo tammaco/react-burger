@@ -8,23 +8,26 @@ import { useModal } from '../../hooks/useModal'
 
 import { useDrag } from 'react-dnd'
 
+import { useSelector } from 'react-redux'
+import { getOrderDetails } from '../../services/slices/BurgerConstructor';
+
 function IngredientItem({item}) {
     const { isModalOpen, openModal, closeModal } = useModal();
+    const orderDetails = useSelector(getOrderDetails);
+    const count = orderDetails.find(x => x._id === item._id)?.quantity;
 
     const [{ isDrag }, drag] = useDrag({
-        type: "item",
-        item: { item },
+        type: item.type === "bun" ? "bun" : "item",
+        item: item,
         collect: monitor => ({
             isDrag: monitor.isDragging()
         })
     });
 
-    const borderColor = isDrag ? "lightgreen" : "transparent";
-
     return (
         <>
             <div className={styles.ingredient_item_content} onClick={openModal} ref={drag}>
-                {item.count && <Counter count={item.count} size="default" extraClass="m-1" />}
+                {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
                 <img src={item.image} alt={item.name}></img>
                 <div className={styles.ingredient_item_price}>
                     <p className="text text_type_digits-default">{item.price}</p>
@@ -38,7 +41,7 @@ function IngredientItem({item}) {
                     <Modal onClose={closeModal} header='Детали ингредиента'>
                         <IngredientDetails>{item}</IngredientDetails>
                     </Modal>
-                }
+            }
         </>
     )
 }

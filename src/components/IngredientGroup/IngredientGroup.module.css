@@ -1,0 +1,6 @@
+.columns{
+    width: 600px;
+    min-height: 208px;
+    display: flex;
+    flex-wrap: wrap;
+}

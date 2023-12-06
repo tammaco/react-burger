@@ -1,11 +1,10 @@
 import React from 'react'
 import styles from './OrderDetails.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import request from '../../utils/request'
 import PropTypes from 'prop-types';
+import request from '../../utils/request'
 
 function OrderDetails ({ orderItemIds }) {
-
     const [orderNumber, setOrderNumber] = React.useState(null);
 
     const getOrderNumber = () => {

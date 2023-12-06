@@ -2,7 +2,7 @@ import styles from './ModalOverlay.module.css';
 import PropTypes from 'prop-types';
 import React from 'react'
 
-function ModalOverlay({onClose}) {
+function ModalOverlay({ onClose }) {
     const modalContainerRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -19,7 +19,7 @@ function ModalOverlay({onClose}) {
     }, [onClose])
 
     return (
-        <div className={styles.modal_overlay}  ref={modalContainerRef}></div>
+        <div className={styles.modal_overlay} ref={modalContainerRef}></div>
     )
 }
 

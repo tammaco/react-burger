@@ -26,3 +26,14 @@
     height: 48px;
     text-align: center;
 }
+
+.isHover {
+    border: 2px dashed #4C4CFF;
+}
+
+.constructor_cap_text {
+    margin-right: 20px;
+    line-height: 24px;
+    flex-grow: 1;
+    text-align: center;
+}

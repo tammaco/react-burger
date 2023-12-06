@@ -6,7 +6,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { createPortal } from 'react-dom';
 
-function Modal ({onClose, header, children})  {
+function Modal({ onClose, header, children }) {
     const modalRoot = document.getElementById("react-modals");
 
     React.useEffect(() => {
@@ -25,17 +25,17 @@ function Modal ({onClose, header, children})  {
     const modalContent = (
         <>
             <div className={styles.modal}>
-              <div className={styles.modal_header}>
-                <div className={styles.modal_title}>
-                    <p className="text text_type_main-large">{header}</p>
+                <div className={styles.modal_header}>
+                    <div className={styles.modal_title}>
+                        <p className="text text_type_main-large">{header}</p>
+                    </div>
+                    <div className={styles.modal_close_btn}>
+                        <CloseIcon type="primary" onClick={onClose} />
+                    </div>
                 </div>
-                <div className={styles.modal_close_btn}>
-                    <CloseIcon type="primary" onClick={onClose} />
-                </div>
-              </div>
-              {children}
-          </div>
-          <ModalOverlay onClose={() => onClose()}></ModalOverlay>
+                {children}
+            </div>
+            <ModalOverlay onClose={() => onClose()}></ModalOverlay>
         </>
     );
 

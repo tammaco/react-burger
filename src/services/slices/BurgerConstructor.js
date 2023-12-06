@@ -1,8 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, nanoid } from '@reduxjs/toolkit'
 
 const initialState = {
     bun: null,
-    items: []
+    items: [],
+    orderDetails: []
 };
 
 const burgerConstructor = createSlice({
@@ -10,29 +11,48 @@ const burgerConstructor = createSlice({
     initialState,
     reducers: {
         addBun: {
-                reducer: (state, action) => {
-                    state.bun = action.payload;
-                },
-                prepare: (item) => {
-                    const id = Math.random();
-                    return { payload: { ...item, key: id } };
-                }
+            reducer: (state, action) => {
+                const item = action.payload;
+                if (state.bun)
+                    state.orderDetails = state.orderDetails.filter((x) => x._id !== state.bun._id);
+
+                state.bun = item;
+                state.orderDetails.push({ _id: item._id, quantity: 2, price: item.price });
+            },
+            prepare: (item) => {
+                return { payload: { ...item, key: nanoid() } };
+            }
         },
-        deleteBun(state) {
-            state.bun = null;
-        },
-        addItem(state, action) {
-            state.items.push(action.payload);
+        addItem: {
+            reducer: (state, action) => {
+                const item = action.payload;
+                state.items.push(item);
+
+                const existingItem = state.orderDetails.find(x => x._id === item._id);
+                if (existingItem)
+                    state.orderDetails.splice(state.orderDetails.indexOf(existingItem), 1, { _id: item._id, quantity: existingItem.quantity + 1, price: item.price });
+                else
+                    state.orderDetails.push({ _id: item._id, quantity: 1, price: item.price });
+            },
+            prepare: (item) => {
+                return { payload: { ...item, key: nanoid() } };
+            }
         },
         deleteItem: (state, action) => {
-            state.items = state.items.filter((item) => item.key !== action.payload);
+            const item = action.payload;
+            state.items = state.items.filter((x) => x.key !== item.key);
+            state.orderDetails = state.orderDetails.filter((x) => x._id !== item._id);
         },
-    },  
+        reset: () => initialState
+    },
 })
 
 export const getConstructorItems = store => store.bconstructor.items;
-  
-export const { addBun, deleteBun, addItem, deleteItem } = burgerConstructor.actions;
+export const getBun = store => store.bconstructor.bun;
+export const getTotalCost = store => store.bconstructor.orderDetails.reduce(function (a, b) { return a + parseInt(b.price) * b.quantity }, 0);
+export const getOrderDetails = store => store.bconstructor.orderDetails;
+
+export const { addBun, addItem, deleteItem, reset } = burgerConstructor.actions;
 
 export const reducer = burgerConstructor.reducer
 

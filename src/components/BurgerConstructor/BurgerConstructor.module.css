@@ -2,30 +2,35 @@
     height: 912px;
     padding-top: 128px;
     padding-left: 40px;
-}
-
-.bun{
-  padding-left: 20px;
+    min-width: 650px;
 }
 
 .components{
   display: flex; 
   flex-direction: column;
   gap: 10px;
-  height: 350px;
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 8px;
   margin-bottom: 8px;
+  max-height:250px;
 }
 
 .components::-webkit-scrollbar {
     width: 8px;
 }
   
-  
 .components::-webkit-scrollbar-thumb {
     background: linear-gradient(0deg, #4C4CFF, #4C4CFF)
+}
+
+.component {
+  display: flex;
+  align-items: center;
+}
+
+.component_container {
+  margin-left: 20px;
 }
 
 .order_info{
@@ -33,7 +38,7 @@
   padding-top: 40px;
   gap: 40px;
   display: flex; 
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .price{
@@ -42,3 +47,11 @@
   display: flex; 
   align-items: center;
 }
+
+.constructor_cap_text {
+  margin-right: 20px;
+  line-height: 24px;
+  flex-grow: 1;
+  text-align: center;
+}
+

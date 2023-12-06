@@ -1,7 +1,7 @@
 import styles from './IngredientDetails.module.css';
 import { ingredientItem } from '../../utils/types'
 
-function IngredientDetails (props) {
+function IngredientDetails(props) {
     const item = props.children;
 
     return (<div className={styles.content}>

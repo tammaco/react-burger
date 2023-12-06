@@ -15,7 +15,7 @@ export const ingredientItem = PropTypes.shape({
     count: PropTypes.number
 });
 
-export  const ingredientType = {
+export const ingredientType = {
     data: PropTypes.shape({
         success: PropTypes.bool.isRequired,
         data: PropTypes.arrayOf(ingredientItem).isRequired
