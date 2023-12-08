@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 import styles from './ConstructorItem.module.css';
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+import { useDispatch } from 'react-redux'
+import { deleteItem } from '../../services/slices/BurgerConstructor';
 
 function ConstructorItem({ item, index, moveItem }) {
     const ref = useRef(null);
+    const dispatch = useDispatch();
 
     const [{isHover}, drop] = useDrop({
         accept: 'ingredient',
@@ -55,7 +58,8 @@ function ConstructorItem({ item, index, moveItem }) {
                 isLocked={false}
                 text={item.name}
                 price={item.price}
-                thumbnail={item.image} />
+                thumbnail={item.image} 
+                handleClose={() => dispatch(deleteItem(item))}/>
         </div>
     )
 }
