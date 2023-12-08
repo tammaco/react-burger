@@ -24,11 +24,6 @@
     background: linear-gradient(0deg, #4C4CFF, #4C4CFF)
 }
 
-.component {
-  display: flex;
-  align-items: center;
-}
-
 .component_container {
   margin-left: 20px;
 }
@@ -53,5 +48,13 @@
   line-height: 24px;
   flex-grow: 1;
   text-align: center;
+}
+
+.ingredients_container{
+  margin-left: 20px;
+}
+
+.isHover {
+  border: 2px dashed #4C4CFF;
 }
 

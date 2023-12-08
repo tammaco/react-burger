@@ -16,7 +16,7 @@ function IngredientItem({item}) {
     const orderDetails = useSelector(getOrderDetails);
     const count = orderDetails.find(x => x._id === item._id)?.quantity;
 
-    const [{ isDrag }, drag] = useDrag({
+    const [, drag] = useDrag({
         type: item.type === "bun" ? "bun" : "item",
         item: item,
         collect: monitor => ({

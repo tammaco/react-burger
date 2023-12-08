@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useModal } from '../../hooks/useModal'
@@ -8,7 +8,7 @@ import ConstructorItem from '../ConstructorItem/ConstructorItem'
 import BunItem from '../BunItem/BunItem'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { getConstructorItems, getBun, addItem, getTotalCost, reset } from '../../services/slices/BurgerConstructor';
+import { getConstructorItems, getBun, addItem, getTotalCost, reset, swapItems } from '../../services/slices/BurgerConstructor';
 
 import { useDrop } from 'react-dnd'
 
@@ -20,7 +20,7 @@ function BurgerConstructor(props) {
     const bun = useSelector(getBun);
     const totalCost = useSelector(getTotalCost)
 
-    React.useMemo(() => {
+    useMemo(() => {
         let ids = [];
         if (bun) ids.push(bun._id)
         if (items) ids = ids.concat(items.map(function (item) { return item._id; }));
@@ -30,14 +30,8 @@ function BurgerConstructor(props) {
 
     const moveItem = useCallback(
         (dragIndex, dropIndex) => {
-            const dragItem = items[dragIndex];
-            const dropItem = items[dropIndex];
-
-            items = items.splice(dragIndex, 1, dropItem);
-            items = items.splice(dropIndex, 1, dragItem);
-        },
-        [items],
-    )
+            dispatch(swapItems({ dragIndex: dragIndex, dropIndex: dropIndex }));
+        }, [dispatch])
 
     const [{ isHover }, dropItem] = useDrop({
         accept: "item",
@@ -49,26 +43,29 @@ function BurgerConstructor(props) {
         },
     });
 
+    const renderConstructorItem = useCallback((item, index) => {
+        return (
+            <ConstructorItem key={index} item={item} index={index} moveItem={moveItem}></ConstructorItem>
+        )
+    }, [moveItem])
+
     const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset()) });
 
     return (
         <section className={styles.layout}>
             <BunItem pos="top" bun={bun}></BunItem>
 
-            <div className={`${styles.components}${isHover ? styles.isHover : ''}`} ref={dropItem}>
+            <div className={`${styles.components} ${isHover ? styles.isHover : ''}`} ref={dropItem}>
                 {
                     items.length > 0
-                        ? (
-                            items.map((item, index) => (
-                                <div className={styles.component} key={index}>
-                                    <ConstructorItem item={item}></ConstructorItem>
-                                </div>))
-                        ) : (
-                            <div className={`constructor-element`}>
+                        ? (items.map((item, index) => renderConstructorItem(item, index)))
+                        : (
+                            <div className={`${bun ? styles.ingredients_container : ''} constructor-element`}>
                                 <span className="constructor-element__row">
                                     <span className={styles.constructor_cap_text}>Выберите ингредиенты</span>
                                 </span>
-                            </div>)
+                            </div>
+                        )
                 }
             </div>
 

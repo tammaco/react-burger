@@ -29,7 +29,7 @@ export default function BunItem({ bun, pos }) {
             )
             :
             (
-                <div className={`${isHover ? styles.isHover : ''} constructor-element constructor-element_pos_${pos}`} ref={refDrop}>
+                <div className={`${isHover ? styles.isHover : ''} ${styles.bun} constructor-element constructor-element_pos_${pos}`} ref={refDrop}>
                     <span className="constructor-element__row"><span className={styles.constructor_cap_text}>Выберите булки</span></span>
                 </div>
             )

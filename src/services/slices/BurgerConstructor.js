@@ -43,7 +43,13 @@ const burgerConstructor = createSlice({
             state.items = state.items.filter((x) => x.key !== item.key);
             state.orderDetails = state.orderDetails.filter((x) => x._id !== item._id);
         },
-        reset: () => initialState
+        reset: () => initialState,
+        swapItems: (state, action) => {
+            const dragIndex = action.payload.dragIndex;
+            const dropIndex = action.payload.dropIndex;
+
+            state.items[dropIndex] = state.items.splice(dragIndex, 1, state.items[dropIndex])[0];
+        },
     },
 })
 
@@ -52,7 +58,7 @@ export const getBun = store => store.bconstructor.bun;
 export const getTotalCost = store => store.bconstructor.orderDetails.reduce(function (a, b) { return a + parseInt(b.price) * b.quantity }, 0);
 export const getOrderDetails = store => store.bconstructor.orderDetails;
 
-export const { addBun, addItem, deleteItem, reset } = burgerConstructor.actions;
+export const { addBun, addItem, deleteItem, reset, swapItems } = burgerConstructor.actions;
 
 export const reducer = burgerConstructor.reducer
 

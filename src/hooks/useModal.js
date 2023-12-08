@@ -12,7 +12,7 @@ export const useModal = (customOnCloseFunction) => {
       customOnCloseFunction();
     
     setIsModalOpen(false);
-  }, []);
+  }, [customOnCloseFunction]);
 
   return {
     isModalOpen,

@@ -1,0 +1,11 @@
+.move {
+    cursor: move;
+}
+.isHover{
+    border: 2px dashed rgb(255, 255, 255);
+}
+
+.layout{
+    display: flex;
+    align-items: center;
+}

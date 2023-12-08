@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -8,34 +8,15 @@ import IngredientGroup from '../IngredientGroup/IngredientGroup'
 import { useGetIngredientsQuery } from '../../hooks/useApi'
 
 function BurgerIngredients(props) {
+  const [current, setCurrent] = useState('bun');
+  const [tabsRefOffSetTop, setTabsRefOffSetTop] = useState(0);
 
-  const [current, setCurrent] = React.useState('bun');
-  const { data: ingredients = [], isSuccess, isError, isLoading } = useGetIngredientsQuery();
+  const tabsRef = useRef(null);
+  const bunRef = useRef(null);
+  const sauceRef = useRef(null);
+  const mainRef = useRef(null);
 
-  // const { bunRef } = React.createRef();
-  // const { sauceRef } = React.createRef();
-  // const { mainRef } = React.createRef();
-  const { scrollContainerRef, tabsRef, bunRef, sauceRef, mainRef } = useRef(null);
-
-  const onScrollHandler = (event) => {
-    if (tabsRef.current)
-      console.log(tabsRef?.current);
-    // console.log(bunRef?.current);
-    // console.log(sauceRef?.current);
-    // console.log(mainRef?.current);
-    // console.log(tabRef?.current?.getBoundingClientRect());
-    // console.log(tabsRef?.current?.scrollTop);
-    // console.log(mainRef?.current?.scrollTop);
-  };
-
-
-  useEffect(() => {
-    const container = scrollContainerRef;
-    if (container) {
-      container.current.addEventListener("scroll", onScrollHandler);
-    }
-  }, [onScrollHandler]);
-
+  const { data: ingredients } = useGetIngredientsQuery();
 
   const tabs = [
     { id: 1, name: "Булки", type: 'bun' },
@@ -43,46 +24,65 @@ function BurgerIngredients(props) {
     { id: 3, name: "Начинки", type: 'main' }
   ];
 
+  useEffect(() => { setTabsRefOffSetTop(tabsRef.current.offsetTop) }, [tabsRef])
+
+  const scrollHandler = useCallback(() => {
+    if (bunRef?.current && sauceRef?.current && mainRef?.current) {
+      const tabsTopArray = [
+        { tab: 'bun', y: Math.abs(bunRef.current.getBoundingClientRect().y) },
+        { tab: 'sauce', y: Math.abs(sauceRef.current.getBoundingClientRect().y) },
+        { tab: 'main', y: Math.abs(mainRef.current.getBoundingClientRect().y) }
+      ];
+      const closestTab = tabsTopArray.reduce(function (a, b) {
+        return (a.y < b.y ? a : b);
+      });
+      setCurrent(closestTab.tab);
+    }
+  }, []);
+
+  const tabClickHandler = useCallback((value) => {
+    let top = 0;
+    switch (value) {
+      case 'bun': top = Math.abs(tabsRefOffSetTop - bunRef.current.offsetTop); break;
+      case 'sauce': top = Math.abs(tabsRefOffSetTop - sauceRef.current.offsetTop); break;
+      case 'main': top = Math.abs(tabsRefOffSetTop - mainRef.current.offsetTop); break;
+      default: top = 0;
+    }
+    tabsRef.current.scroll({ top: top, behavior: "smooth" });
+    setCurrent(value);
+  }, [tabsRefOffSetTop]);
+
+
+  const renderTab = useCallback((tab) => {
+    return (
+      <Tab value={tab.type} key={tab.id} active={current === tab.type} onClick={tabClickHandler}>
+        <p className="text text_type_main-small">{tab.name}</p>
+      </Tab>
+    )
+  }, [current]);
+
   return (
     <section className={styles.layout}>
       <div className={styles.title}>
         <p className="text text_type_main-large">Соберите бургер</p>
       </div>
 
-      <div className={styles.tabs} ref={tabsRef}>
-        {tabs.map((tab) => (
-          <Tab value={tab.type} key={tab.id} active={current === tab.type} onClick={setCurrent}>
-            <p className="text text_type_main-small">{tab.name}</p>
-          </Tab>
-        ))}
+      <div className={styles.tabs}>
+        {tabs.map((tab) => renderTab(tab))}
       </div>
-      <div className={styles.ingredients} ref={scrollContainerRef}>
-        {isError && <p className="text text_type_main-small">Опаньки</p>}
-        {isLoading && <p className="text text_type_main-small">Загрузка ингредиентов...</p>}
-        {isSuccess
-          && (
-            <>
-              <IngredientGroup ref={bunRef}
-                tabName='Булки' items={ingredients.filter(item => item.type === 'bun')}>
-              </IngredientGroup>
-              <IngredientGroup ref={sauceRef}
-                tabName='Соусы' items={ingredients.filter(item => item.type === 'sauce')}>
-              </IngredientGroup>
-              <IngredientGroup ref={mainRef}
-                tabName='Начинки' items={ingredients.filter(item => item.type === 'main')}>
-              </IngredientGroup>
-              {/* {
-                tabs.map((tab, index) => (
-                  <div key={index}>
-                    <IngredientGroup ref={tab.type === 'bun' ? bunRef : tab.type === 'sauce' ? sauceRef : mainRef} 
-                      tabName={tab.name} items={ingredients.filter(item => item.type === tab.type)}>
-                    </IngredientGroup>
-                  </div>
-                ))
-              } */}
-            </>
-          )
-        }
+
+      <div className={styles.ingredients} id='scroll-container' onScroll={scrollHandler} ref={tabsRef}>
+
+        <IngredientGroup ref={bunRef}
+          tabName='Булки' items={ingredients.filter(item => item.type === 'bun')}>
+        </IngredientGroup>
+        <IngredientGroup ref={sauceRef}
+          tabName='Соусы' items={ingredients.filter(item => item.type === 'sauce')}>
+        </IngredientGroup>
+        <IngredientGroup ref={mainRef}
+          tabName='Начинки' items={ingredients.filter(item => item.type === 'main')}>
+        </IngredientGroup>
+
       </div>
     </section>
   )
