@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { reducer as burgerConstructor } from '../services/slices/BurgerConstructor';
+import { reducer as burgerConstructor } from './actions/BurgerConstructor';
 
 import { burgerApi } from '../hooks/useApi'
 

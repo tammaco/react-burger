@@ -10,8 +10,19 @@ export const burgerApi = createApi({
     getIngredients: builder.query({
       query: (arg) => '/ingredients',
       transformResponse: (response) => response.data ?? []
+    }),
+    sendOrder: builder.query({
+      query: (arg) => ({
+        url: '/orders',
+        method: 'POST',
+        prepareHeaders: (headers) => {
+          headers.set("Content-Type", "application/json;charset=utf-8")
+            return headers;
+        },
+        body: { 'ingredients': arg}
+      }),
     })
   }),
 });
 
-export const { useGetIngredientsQuery } = burgerApi;
+export const { useGetIngredientsQuery, useSendOrderQuery } = burgerApi;

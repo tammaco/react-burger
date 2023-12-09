@@ -8,7 +8,8 @@ import ConstructorItem from '../ConstructorItem/ConstructorItem'
 import BunItem from '../BunItem/BunItem'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { getConstructorItems, getBun, addItem, getTotalCost, reset, swapItems } from '../../services/slices/BurgerConstructor';
+import { addItem, reset, swapItems } from '../../services/actions/BurgerConstructor';
+import { getConstructorItems, getBun, getTotalCost } from '../../services/selectors/BurgerConstructor';
 
 import { useDrop } from 'react-dnd'
 
@@ -45,7 +46,7 @@ function BurgerConstructor(props) {
 
     const renderConstructorItem = useCallback((item, index) => {
         return (
-            <ConstructorItem key={index} item={item} index={index} moveItem={moveItem}></ConstructorItem>
+            <ConstructorItem key={item.key} item={item} index={index} moveItem={moveItem}></ConstructorItem>
         )
     }, [moveItem])
 
@@ -76,7 +77,7 @@ function BurgerConstructor(props) {
                     <p className="text text_type_digits-default">{totalCost}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large" onClick={openModal}>Оформить заказ</Button>
+                <Button htmlType="button" type="primary" size="large" disabled={!bun} onClick={openModal}>Оформить заказ</Button>
             </div>
             {isModalOpen && <Modal onClose={closeModal}><OrderDetails orderItemIds={orderItemIds} /></Modal>}
         </section>

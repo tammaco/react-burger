@@ -9,7 +9,7 @@ import { useModal } from '../../hooks/useModal'
 import { useDrag } from 'react-dnd'
 
 import { useSelector } from 'react-redux'
-import { getOrderDetails } from '../../services/slices/BurgerConstructor';
+import { getOrderDetails } from '../../services/selectors/BurgerConstructor';
 
 function IngredientItem({item}) {
     const { isModalOpen, openModal, closeModal } = useModal();

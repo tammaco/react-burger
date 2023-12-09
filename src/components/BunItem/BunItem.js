@@ -1,4 +1,4 @@
-import { addBun } from '../../services/slices/BurgerConstructor'
+import { addBun } from '../../services/actions/BurgerConstructor'
 import { useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux'

@@ -5,7 +5,7 @@ import styles from './ConstructorItem.module.css';
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
-import { deleteItem } from '../../services/slices/BurgerConstructor';
+import { deleteItem } from '../../services/actions/BurgerConstructor';
 
 function ConstructorItem({ item, index, moveItem }) {
     const ref = useRef(null);
