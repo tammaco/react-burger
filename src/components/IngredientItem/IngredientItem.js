@@ -1,20 +1,19 @@
 import styles from './IngredientItem.module.css';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import { ingredientItem } from '../../utils/types'
-import IngredientDetails from '../IngredientDetails/IngredientDetails'
-
-import  Modal from '../Modal/Modal'
-import { useModal } from '../../hooks/useModal'
 
 import { useDrag } from 'react-dnd'
 
 import { useSelector } from 'react-redux'
 import { getOrderDetails } from '../../services/selectors/BurgerConstructor';
 
+import { Link, useLocation } from 'react-router-dom';
+
 function IngredientItem({item}) {
-    const { isModalOpen, openModal, closeModal } = useModal();
     const orderDetails = useSelector(getOrderDetails);
     const count = orderDetails.find(x => x._id === item._id)?.quantity;
+    const ingredientId = item['_id'];
+    const location = useLocation();
 
     const [, drag] = useDrag({
         type: item.type === "bun" ? "bun" : "item",
@@ -25,8 +24,16 @@ function IngredientItem({item}) {
     });
 
     return (
-        <>
-            <div className={styles.ingredient_item_content} onClick={openModal} ref={drag}>
+        <Link
+        key={ingredientId}
+        // Тут мы формируем динамический путь для нашего ингредиента
+        to={`/ingredients/${ingredientId}`}
+        // а также сохраняем в свойство background роут,
+        // на котором была открыта наша модалка
+        state={{ background: location }}
+        className={styles.link}
+      >
+            <div className={styles.ingredient_item_content} ref={drag}>
                 {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
                 <img src={item.image} alt={item.name}></img>
                 <div className={styles.ingredient_item_price}>
@@ -37,12 +44,7 @@ function IngredientItem({item}) {
                     <p className="text text_type_main-small">{item.name}</p>
                 </div>
             </div>
-            {isModalOpen && 
-                    <Modal onClose={closeModal} header='Детали ингредиента'>
-                        <IngredientDetails>{item}</IngredientDetails>
-                    </Modal>
-            }
-        </>
+        </Link>
     )
 }
 
