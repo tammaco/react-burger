@@ -12,11 +12,10 @@ import { Link, useNavigate } from 'react-router-dom';
 export function ForgotPassword() {
     const { formData, handleInputChange } = useForm({ email: '' });
     const navigate = useNavigate();
-    const [trigger, { isLoading, isError, data, error }] = useLazyPasswordResetQuery();
+    const [trigger, { data }] = useLazyPasswordResetQuery();
 
     useEffect(() => {
-        if (data && data.success)
-        {
+        if (data && data.data?.success) {
             localStorage.setItem("fromForgotPassword", true);
             navigate('/reset-password');
         }
@@ -31,16 +30,17 @@ export function ForgotPassword() {
         <div className={styles.layout}>
 
             <p className="text text_type_main-medium mb-6">Восстановление пароля</p>
+            <form className={styles.form} onSubmit={onSubmit}>
+                <EmailInput
+                    onChange={handleInputChange}
+                    value={formData.email}
+                    name={'email'}
+                    placeholder="Уажите Email"
+                    extraClass="mb-6"
+                />
 
-            <EmailInput
-                onChange={handleInputChange}
-                value={formData.email}
-                name={'email'}
-                placeholder="Уажите Email"
-                extraClass="mb-6"
-            />
-
-            <Button htmlType="button" type="primary" extraClass="mb-20" size="large" onClick={(e) => { onSubmit(e) }}>Восстановить</Button>
+                <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Восстановить</Button>
+            </form>
 
             <div className={styles.aditional_actions}>
                 <p className="text text_type_main-default text_color_inactive mr-1">Вспомнили пароль?</p>
@@ -48,6 +48,7 @@ export function ForgotPassword() {
                     <Link to='/login' className={styles.link}>Войти</Link>
                 </p>
             </div>
+
         </div>
     )
 }

@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const BASE_URL = "https://norma.nomoreparties.space/api";
+import {
+  BASE_URL, TOKEN_URL, PASSWORD_RESET_URL, PASSWORD_RESET_RESET_URL, LOG_OUT_URL
+  , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL
+} from '../utils/constatnts'
 
 const setTokens = (refreshToken, accessToken) => {
   localStorage.setItem("refreshToken", refreshToken);
@@ -12,7 +15,7 @@ const checkReponse = (res) => {
 };
 
 const refreshToken = () => {
-  return fetch(`${BASE_URL}/auth/token`, {
+  return fetch(`${BASE_URL}${TOKEN_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -21,6 +24,20 @@ const refreshToken = () => {
       token: localStorage.getItem("refreshToken"),
     }),
   }).then(checkReponse);
+};
+
+export const getUser = () => {
+  const token = localStorage.getItem("accessToken");
+  if (token)
+    return fetch(`${BASE_URL}${USER_URL}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        "Authorization": token
+      }
+    }).then(function (res) { return res.ok ? res.json() : null });
+
+  return null;
 };
 
 const baseQuery = fetchBaseQuery({
@@ -48,7 +65,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     result = await baseQuery(args, api, extraOptions);
   else {
     result = await baseQueryWithAccessToken(args, api, extraOptions);
-    if (result.error && (result.error.status === 401 || result.error.status === 403)) {
+    if (result.error && result.error.data?.message === "jwt expired") {
       // try to get a new token
       const refreshResult = await refreshToken();
       if (refreshResult.success) {
@@ -67,27 +84,23 @@ export const burgerApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getIngredients: builder.query({
-      query: () => '/ingredients',
+      query: () => ({
+        url: `${INGREDIENTS_URL}`,
+        method: 'GET'
+      }),
       transformResponse: (response) => response.data ?? []
     }),
     sendOrder: builder.query({
       query: (arg) => ({
-        url: '/orders',
+        url: `${ORDERS_URL}`,
         method: 'POST',
         body: { 'ingredients': arg }
       }),
       extraOptions: { needAccessToken: true }
     }),
-    getUser: builder.query({
-      query: (arg) => ({
-        url: '/auth/user',
-        method: 'POST',
-        body: arg
-      }),
-    }),
     updateUser: builder.query({
       query: (arg) => ({
-        url: '/auth/user',
+        url: `${USER_URL}`,
         method: 'PATCH',
         body: arg
       }),
@@ -95,42 +108,42 @@ export const burgerApi = createApi({
     }),
     login: builder.query({
       query: (arg) => ({
-        url: '/auth/login',
+        url: `${LOGIN_URL}`,
         method: 'POST',
         body: arg
       }),
     }),
     register: builder.query({
       query: (arg) => ({
-        url: '/auth/register',
+        url: `${REGISTER_URL}`,
         method: 'POST',
         body: arg
       }),
     }),
     logout: builder.query({
       query: () => ({
-        url: '/auth/logout',
+        url: `${LOG_OUT_URL}`,
         method: 'POST',
         body: { token: localStorage.getItem("refreshToken") }
       })
     }),
     passwordReset: builder.query({
       query: (arg) => ({
-        url: '/password-reset',
+        url: `${PASSWORD_RESET_URL}`,
         method: 'POST',
         body: { "email": arg }
       }),
     }),
     passwordResetReset: builder.query({
       query: (arg) => ({
-        url: '/password-reset/reset',
+        url: `${PASSWORD_RESET_RESET_URL}`,
         method: 'POST',
         body: arg
       }),
     }),
     token: builder.query({
       query: () => ({
-        url: '/auth/token',
+        url: `${TOKEN_URL}`,
         method: 'POST',
         body: { token: localStorage.getItem("refreshToken") }
       }),

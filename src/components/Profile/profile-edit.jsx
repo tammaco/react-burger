@@ -22,10 +22,10 @@ export function ProfileEdit() {
     });
 
     const { email, password, name } = formData;
-    const [trigger, { isLoading, isError, data, error }] = useLazyUpdateUserQuery();
+    const [trigger, { data }] = useLazyUpdateUserQuery();
 
     useEffect(() => {
-        if (data && data.success) {
+        if (data && data.data?.success) {
             dispatch(setUser(data.user));
             resetValues();
         }
@@ -44,19 +44,19 @@ export function ProfileEdit() {
 
     return (
         <div className={styles.outlet_layout}>
-            <div>
+            <form className={styles.form} onSubmit={onSubmit}>
                 <Input
-                    type={'text'}
+                    type='text'
                     placeholder={'Имя'}
                     onChange={handleInputChange}
                     value={name}
-                    name={'name'}
+                    name='name'
                     extraClass="mb-6"
                 />
                 <EmailInput
                     onChange={handleInputChange}
                     value={email}
-                    name={'email'}
+                    name='email'
                     placeholder="Логин"
                     extraClass="mb-6"
                 />
@@ -64,16 +64,17 @@ export function ProfileEdit() {
                 <PasswordInput
                     onChange={handleInputChange}
                     value={password}
-                    name={'password'}
+                    name='password'
                     placeholder="Пароль"
                     extraClass="mb-6"
                 />
-            </div>
-            {isChange && (<div className={styles.aditional_actions}>
-                <Button htmlType="button" type="secondary" extraClass="mb-20" size="medium" onClick={(e) => cancelEdit(e)}>Отмена</Button>
-                <Button htmlType="button" type="primary" extraClass="mb-20" size="medium" onClick={(e) => onSubmit(e)}>Сохранить</Button>
-            </div>)
-            }
+
+                {isChange && (<div className={styles.aditional_actions}>
+                    <Button htmlType="button" type="secondary" extraClass="mb-20" size="medium" onClick={cancelEdit}>Отмена</Button>
+                    <Button htmlType="submit" type="primary" extraClass="mb-20" size="medium">Сохранить</Button>
+                </div>)
+                }
+            </form>
         </div>
     )
 }

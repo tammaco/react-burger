@@ -13,13 +13,13 @@ export function ResetPassword() {
     const { formData, handleInputChange } = useForm({
         secretCode: '',
         password: '',
-    }, (formData) => console.log(formData));
+    });
+
     const navigate = useNavigate();
-    const [trigger, { isLoading, isError, data, error }] = useLazyPasswordResetResetQuery();
+    const [trigger, { data }] = useLazyPasswordResetResetQuery();
 
     useEffect(() => {
-        if (data && data.success)
-        {
+        if (data && data.data?.success) {
             localStorage.removeItem("fromForgotPassword");
             navigate('/login');
         }
@@ -27,41 +27,44 @@ export function ResetPassword() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        trigger({ password: formData.password, token: formData.secretCode});
+        trigger({ password: formData.password, token: formData.secretCode });
     }
 
-    return localStorage.getItem("fromForgotPassword") === null && <Navigate to='/'></Navigate>
-        || (
-            <div className={styles.layout}>
+    if (localStorage.getItem("fromForgotPassword") === null)
+        return <Navigate to='/forgot-password'></Navigate>
 
-                <p className="text text_type_main-medium mb-6">Восстановление пароля</p>
+    return (
+        <div className={styles.layout}>
 
+            <p className="text text_type_main-medium mb-6">Восстановление пароля</p>
+
+            <form className={styles.form} onSubmit={onSubmit}>
                 <PasswordInput
                     placeholder={'Введите новый пароль'}
                     onChange={handleInputChange}
                     value={formData.password}
-                    name={'password'}
+                    name='password'
                     extraClass="mb-6"
                 />
 
                 <Input
-                    type={'text'}
+                    type='text'
                     placeholder={'Введите код из письма'}
                     onChange={handleInputChange}
                     value={formData.secretCode}
-                    name={'secretCode'}
+                    name='secretCode'
                     extraClass="mb-6"
                 />
 
-                <Button htmlType="button" type="primary" extraClass="mb-20" size="large" onClick={(e) => onSubmit(e)}>Сохранить</Button>
+                <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Сохранить</Button>
+            </form>
 
-                <div className={styles.aditional_actions}>
-                    <p className="text text_type_main-default text_color_inactive mr-1">Вы — новый пользователь?</p>
-                    <p className='text text_type_main-default'>
-                        <Link to='/login' className={styles.link}>Войти</Link>
-                    </p>
-                </div>
+            <div className={styles.aditional_actions}>
+                <p className="text text_type_main-default text_color_inactive mr-1">Вы — новый пользователь?</p>
+                <p className="text text_type_main-default">
+                    <Link to='/login' className={styles.link}>Войти</Link>
+                </p>
             </div>
-        )
-
+        </div>
+    )
 }

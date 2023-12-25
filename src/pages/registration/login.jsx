@@ -21,7 +21,7 @@ export function Login() {
     const [trigger, data] = useLazyLoginQuery();
 
     useEffect(() => {
-        if (data.isSuccess) {
+        if (data && data.data?.success) {
             localStorage.setItem("refreshToken", data.data.refreshToken);
             localStorage.setItem("accessToken", data.data.accessToken);
             dispatch(setUser(data.data.user));
@@ -38,23 +38,24 @@ export function Login() {
         <div className={styles.layout}>
 
             <p className="text text_type_main-medium mb-6">Вход</p>
+            <form className={styles.form} onSubmit={onSubmit}>
+                <EmailInput
+                    onChange={handleInputChange}
+                    value={email}
+                    name='email'
+                    placeholder="Логин"
+                    extraClass="mb-6"
+                />
 
-            <EmailInput
-                onChange={handleInputChange}
-                value={email}
-                name={'email'}
-                placeholder="Логин"
-                extraClass="mb-6"
-            />
+                <PasswordInput
+                    onChange={handleInputChange}
+                    value={password}
+                    name='password'
+                    extraClass="mb-6"
+                />
 
-            <PasswordInput
-                onChange={handleInputChange}
-                value={password}
-                name={'password'}
-                extraClass="mb-6"
-            />
-
-            <Button htmlType="button" type="primary" extraClass="mb-20" size="large" onClick={(e) => onSubmit(e)}>Войти</Button>
+                <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Войти</Button>
+            </form>
 
             {data.isError && <p>Ошибка: {data.error?.data?.message}</p>}
 
@@ -70,6 +71,7 @@ export function Login() {
                     <Link to='/forgot-password' className={styles.link}>Восстановить пароль</Link>
                 </p>
             </div>
+
         </div>
     )
 }

@@ -18,10 +18,10 @@ export function Register() {
     });
 
     const dispatch = useDispatch();
-    const [trigger, data]  = useLazyRegisterQuery();
+    const [trigger, data] = useLazyRegisterQuery();
 
     useEffect(() => {
-        if (data.isSuccess) {
+        if (data && data.data?.success) {
             localStorage.setItem("refreshToken", data.refreshToken);
             localStorage.setItem("accessToken", data.accessToken);
             dispatch(setUser(data.user));
@@ -38,32 +38,33 @@ export function Register() {
         <div className={styles.layout}>
 
             <p className="text text_type_main-medium mb-6">Вход</p>
+            <form className={styles.form} onSubmit={onSubmit}>
+                <Input
+                    type='text'
+                    placeholder={'Имя'}
+                    onChange={handleInputChange}
+                    value={formData.userName}
+                    name='userName'
+                    extraClass="mb-6"
+                />
 
-            <Input
-                type={'text'}
-                placeholder={'Имя'}
-                onChange={handleInputChange}
-                value={formData.userName}
-                name={'userName'}
-                extraClass="mb-6"
-            />
+                <EmailInput
+                    onChange={handleInputChange}
+                    value={formData.email}
+                    name='email'
+                    placeholder="Логин"
+                    extraClass="mb-6"
+                />
 
-            <EmailInput
-                onChange={handleInputChange}
-                value={formData.email}
-                name={'email'}
-                placeholder="Логин"
-                extraClass="mb-6"
-            />
+                <PasswordInput
+                    onChange={handleInputChange}
+                    value={formData.password}
+                    name='password'
+                    extraClass="mb-6"
+                />
 
-            <PasswordInput
-                onChange={handleInputChange}
-                value={formData.password}
-                name={'password'}
-                extraClass="mb-6"
-            />
-
-            <Button htmlType="button" type="primary" extraClass="mb-20" size="large" onClick={(e) => onSubmit(e)}>Зарегистрироваться</Button>
+                <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Зарегистрироваться</Button>
+            </form>
 
             {data.isError && <p>Ошибка: {data.error?.data?.message}</p>}
 

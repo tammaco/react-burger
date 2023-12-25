@@ -9,12 +9,8 @@ function OrderDetails({ orderItemIds }) {
 
     return (
         <div className={styles.content}>
-            { loading && <Loading /> }
-            {!loading && error &&
-                <div className="loading_img_wrapper">
-                    <p className="text text_type_main-default">Что-то пошло не так... Попробуйте ещё разок!</p>
-                </div>
-            }
+            { loading && <Loading isLoading={true} />}
+            {!loading && error && <Loading isLoading={false} isError={true} /> }
             {!error && data?.order?.number &&
                 <><p className="text text_type_digits-large">{data?.order?.number}</p>
                     <p className='pt-4 pb-15 text text_type_main-medium'>идентификатор заказа</p>
