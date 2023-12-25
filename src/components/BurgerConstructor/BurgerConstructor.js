@@ -9,17 +9,20 @@ import BunItem from '../BunItem/BunItem'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { addItem, reset, swapItems } from '../../services/actions/BurgerConstructor';
-import { getConstructorItems, getBun, getTotalCost } from '../../services/selectors/BurgerConstructor';
+import { getConstructorItems, getBun, getTotalCost, getUser } from '../../services/selectors/BurgerConstructor';
+import { useNavigate } from 'react-router-dom';
 
 import { useDrop } from 'react-dnd'
 
 function BurgerConstructor(props) {
     const [orderItemIds, setOrderItemIds] = useState([]);
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const items = useSelector(getConstructorItems);
     const bun = useSelector(getBun);
-    const totalCost = useSelector(getTotalCost)
+    const totalCost = useSelector(getTotalCost);
+    const user = useSelector(getUser);
 
     useMemo(() => {
         let ids = [];
@@ -48,7 +51,14 @@ function BurgerConstructor(props) {
         return (
             <ConstructorItem key={item.key} item={item} index={index} moveItem={moveItem}></ConstructorItem>
         )
-    }, [moveItem])
+    }, [moveItem]);
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        if (user === null)
+            navigate('/login', { state: { from: '/' } });
+        else openModal();
+    }
 
     const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset()) });
 
@@ -77,7 +87,7 @@ function BurgerConstructor(props) {
                     <p className="text text_type_digits-default">{totalCost}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large" disabled={!bun} onClick={openModal}>Оформить заказ</Button>
+                <Button htmlType="button" type="primary" size="large" disabled={!bun} onClick={onSubmit}>Оформить заказ</Button>
             </div>
             {isModalOpen && <Modal onClose={closeModal}><OrderDetails orderItemIds={orderItemIds} /></Modal>}
         </section>

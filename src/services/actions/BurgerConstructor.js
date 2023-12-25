@@ -1,10 +1,16 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { getUser } from '../../hooks/useApi'
 
 const initialState = {
     bun: null,
     items: [],
-    orderDetails: []
+    orderDetails: [],
+    user: null,
+    isAuthChecked: false
 };
+
+const token = localStorage.getItem('accessToken') || null;
+const result = await getUser();
 
 const burgerConstructor = createSlice({
     name: 'bconstructor',
@@ -43,17 +49,41 @@ const burgerConstructor = createSlice({
             state.items = state.items.filter((x) => x.key !== item.key);
             state.orderDetails = state.orderDetails.filter((x) => x._id !== item._id);
         },
-        reset: () => initialState,
+        reset: (state) => state = {
+            ...state,
+            bun: null,
+            items: [],
+            orderDetails: []
+        },
         swapItems: (state, action) => {
             const dragIndex = action.payload.dragIndex;
             const dropIndex = action.payload.dropIndex;
 
             state.items[dropIndex] = state.items.splice(dragIndex, 1, state.items[dropIndex])[0];
         },
-    },
+        setUser: (state, action) => {
+            state.user = action.payload;
+        },
+        setIsAuthChecked: (state, action) => {
+            state.isAuthChecked = action.payload;
+        },
+        checkUserAuth: (state) => {
+            if (token) {
+
+                if (result?.success)
+                    state.user = result.user;
+
+                if (state.user === null) {
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("refreshToken");
+                }
+            }
+            state.isAuthChecked = true;
+        }
+    }
 })
 
-export const { addBun, addItem, deleteItem, reset, swapItems } = burgerConstructor.actions;
+export const { addBun, addItem, deleteItem, reset, swapItems, setUser, setIsAuthChecked, checkUserAuth } = burgerConstructor.actions;
 
 export const reducer = burgerConstructor.reducer
 

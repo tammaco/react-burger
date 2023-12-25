@@ -1,0 +1,38 @@
+.layout {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    margin-top: 120px;
+}
+
+.navigation {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    width: 320px;
+    padding: 16px;
+}
+
+.link {
+    color: #8585AD;
+    text-decoration: none;
+    padding-bottom: 12px;
+}
+
+.link_acitve {
+    color: #F2F2F3;
+    text-decoration: none;
+    padding-bottom: 12px;
+}
+
+.aditional_actions{
+    display: flex;
+    justify-content: center;
+}
+
+.outlet_layout {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+}
