@@ -11,7 +11,7 @@ export function Profile() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (data.isSuccess) 
+        if (data && data.data?.success) 
             {
                 localStorage.removeItem("refreshToken");
                 localStorage.removeItem("accessToken");

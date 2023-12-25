@@ -11,10 +11,10 @@ import { OrdersHistory } from '../OrdersHistory/orders-history'
 import { Order } from '../Order/order'
 
 import { NotFound404 } from '../../pages/not-found/not-found'
-import { Login } from '../Registration/login'
-import { Register } from '../Registration/register'
-import { ForgotPassword } from '../Registration/forgot-password'
-import { ResetPassword } from '../Registration/reset-password'
+import { Login } from '../../pages/registration/login'
+import { Register } from '../../pages/registration/register'
+import { ForgotPassword } from '../../pages/registration/forgot-password'
+import { ResetPassword } from '../../pages/registration/reset-password'
 
 import { Loading } from '../loading';
 
@@ -35,6 +35,7 @@ function App() {
   const dispatch = useDispatch();
 
   const { isLoading: loading, error } = useGetIngredientsQuery();
+
   const handleModalClose = () => {
     navigate(-1);
   };
@@ -44,15 +45,15 @@ function App() {
   }, [])
 
   if (loading)
-    return <Loading />
+    return <Loading isLoading={true} />
 
   if (!loading && error)
-    return <p className="text text_type_main-small">Опаньки</p>
+    return <Loading isLoading={false} isError={true} />
 
   return (
     <ErrorBoundary>
       <AppHeader />
-      <Routes>
+      <Routes location={location.state?.background || location}>
         <Route path="/" element={<Home />} />
         <Route path='/ingredients/:ingredientId' element={<IngredientDetails />} />
         <Route path="*" element={<NotFound404 />} />

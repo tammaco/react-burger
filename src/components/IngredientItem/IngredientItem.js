@@ -26,10 +26,7 @@ function IngredientItem({item}) {
     return (
         <Link
         key={ingredientId}
-        // Тут мы формируем динамический путь для нашего ингредиента
         to={`/ingredients/${ingredientId}`}
-        // а также сохраняем в свойство background роут,
-        // на котором была открыта наша модалка
         state={{ background: location }}
         className={styles.link}
       >

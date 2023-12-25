@@ -9,7 +9,7 @@ const Protected = ({ onlyUnAuth = false, element }) => {
   const location = useLocation();
 
   if (!isAuthChecked)
-    return <Loading />;
+    return <Loading isLoading={true} />;
 
   if (onlyUnAuth && user != null) {
     const from = location.state?.from || { from: { pathname: '/' } };
