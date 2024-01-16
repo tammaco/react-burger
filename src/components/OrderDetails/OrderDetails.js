@@ -1,10 +1,10 @@
 import styles from './OrderDetails.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import PropTypes from 'prop-types';
 import { useSendOrderQuery } from '../../hooks/useApi'
 import { Loading } from '../loading';
-import { IOrderDetails } from '../../utils/types';
 
-function OrderDetails(orderItemIds: IOrderDetails) : React.JSX.Element {
+function OrderDetails({ orderItemIds }) {
     const { isLoading: loading, error, data } = useSendOrderQuery(orderItemIds);
 
     return (
@@ -26,6 +26,10 @@ function OrderDetails(orderItemIds: IOrderDetails) : React.JSX.Element {
                 </>}
         </div>
     )
+}
+
+OrderDetails.propTypes = {
+    orderItemIds: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default OrderDetails;

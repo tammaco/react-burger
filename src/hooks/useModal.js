@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-export const useModal = (customOnCloseFunction: () => void) => {
+export const useModal = (customOnCloseFunction) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = useCallback(() => {

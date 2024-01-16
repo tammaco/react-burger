@@ -1,6 +1,6 @@
 import styles from './orders-history.module.css';
 
-export function OrdersHistory(): React.JSX.Element {
+export function OrdersHistory() {
     return (
         <div className={styles.layout}>
             <p className="text text_type_main-default">

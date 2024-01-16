@@ -1,16 +1,12 @@
 import { addBun } from '../../services/actions/BurgerConstructor'
 import { useDrop } from 'react-dnd'
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux'
 import styles from '../BunItem/BunItem.module.css';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components'
-import { IIngredientItem } from '../../utils/types'
+import { ingredientItem } from '../../utils/types'
 
-interface IBunItemProps {
-    bun: IIngredientItem;
-    pos: 'top' | 'bottom'
-}
-
-export default function BunItem( { bun, pos } : IBunItemProps) : React.JSX.Element {
+export default function BunItem({ bun, pos }) {
     const dispatch = useDispatch();
 
     const [{ isHover }, refDrop] = useDrop({
@@ -39,3 +35,8 @@ export default function BunItem( { bun, pos } : IBunItemProps) : React.JSX.Eleme
             )
     )
 }
+
+BunItem.propTypes = {
+    bun: ingredientItem || null,
+    pos: PropTypes.string.isRequired
+};

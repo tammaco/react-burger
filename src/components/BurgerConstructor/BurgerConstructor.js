@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, SyntheticEvent } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useModal } from '../../hooks/useModal'
@@ -12,30 +12,28 @@ import { addItem, reset, swapItems } from '../../services/actions/BurgerConstruc
 import { getConstructorItems, getBun, getTotalCost, getUser } from '../../services/selectors/BurgerConstructor';
 import { useNavigate } from 'react-router-dom';
 
-import { IIngredientItem } from '../../utils/types'
-
 import { useDrop } from 'react-dnd'
 
-function BurgerConstructor() : React.JSX.Element  {
-    const [orderItemIds, setOrderItemIds] = useState<string[]>([]);
+function BurgerConstructor(props) {
+    const [orderItemIds, setOrderItemIds] = useState([]);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const items: [IIngredientItem] = useSelector(getConstructorItems);
+    const items = useSelector(getConstructorItems);
     const bun = useSelector(getBun);
     const totalCost = useSelector(getTotalCost);
     const user = useSelector(getUser);
 
     useMemo(() => {
-        let ids: string[] = [];
+        let ids = [];
         if (bun) ids.push(bun._id)
-        if (items) ids = ids.concat(items.map((item) => { return item._id; }));
+        if (items) ids = ids.concat(items.map(function (item) { return item._id; }));
         if (bun) ids.push(bun._id)
         setOrderItemIds(ids);
     }, [bun, items])
 
     const moveItem = useCallback(
-        (dragIndex: number | undefined, dropIndex: number | undefined) => {
+        (dragIndex, dropIndex) => {
             dispatch(swapItems({ dragIndex: dragIndex, dropIndex: dropIndex }));
         }, [dispatch])
 
@@ -49,20 +47,20 @@ function BurgerConstructor() : React.JSX.Element  {
         },
     });
 
-    const renderConstructorItem = useCallback((item: IIngredientItem, index: number) => {
+    const renderConstructorItem = useCallback((item, index) => {
         return (
             <ConstructorItem key={item.key} item={item} index={index} moveItem={moveItem}></ConstructorItem>
         )
     }, [moveItem]);
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         if (user === null)
             navigate('/login', { state: { from: '/' } });
         else openModal();
     }
 
-    const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset(null)) });
+    const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset()) });
 
     return (
         <section className={styles.layout}>

@@ -1,11 +1,7 @@
 import loadingImg from '../images/loading.gif';
+import PropTypes from 'prop-types';
 
-interface ILoadingProps {
-    isLoading: boolean;
-    isError?: boolean;
-}
-
-export function Loading({ isLoading = true, isError = false } : ILoadingProps) : React.JSX.Element {
+export function Loading({ isLoading = true, isError = false }) {
     return (
         <div className="loading_img_wrapper">
             {isLoading && <> <p className="text text_type_main-default">Немного терпения...</p>
@@ -13,3 +9,8 @@ export function Loading({ isLoading = true, isError = false } : ILoadingProps) :
             {isError && <p className="text text_type_main-default">Что-то пошло не так... Попробуйте ещё разок!</p>}
         </div>)
 }
+
+Loading.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+    isError: PropTypes.bool
+};

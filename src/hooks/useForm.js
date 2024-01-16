@@ -1,15 +1,11 @@
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 
-interface IFormData { 
-  [name: string]: string; 
-}
-
-export const useForm = (initialState: IFormData) => {
+export const useForm = (initialState) => {
 
   const [isChange, setIsChange] = useState(false);
   const [formData, setFormData] = useState(initialState);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setIsChange(true);
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }

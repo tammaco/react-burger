@@ -3,9 +3,9 @@ import styles from './AppHeader.module.css';
 import { NavLink } from 'react-router-dom';
 import { useCallback } from 'react'
 
-function AppHeader() : React.JSX.Element  {
+function AppHeader(props) {
 
-  const renderNavLink = useCallback((to: string, caption: string) => {
+  const renderNavLink = useCallback((to, caption) => {
     return (
       <NavLink to={to} className={({ isActive }) => isActive ? styles.nav_link_name_acitve : styles.nav_link_name}>
         {({ isActive }) => {

@@ -1,6 +1,6 @@
 import styles from './IngredientItem.module.css';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
-import { IIngredientItem } from '../../utils/types'
+import { ingredientItem } from '../../utils/types'
 
 import { useDrag } from 'react-dnd'
 
@@ -9,9 +9,9 @@ import { getOrderDetails } from '../../services/selectors/BurgerConstructor';
 
 import { Link, useLocation } from 'react-router-dom';
 
-function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element {
+function IngredientItem({item}) {
     const orderDetails = useSelector(getOrderDetails);
-    const count = orderDetails.find((x: { _id: string; }) => x._id === item._id)?.quantity;
+    const count = orderDetails.find(x => x._id === item._id)?.quantity;
     const ingredientId = item['_id'];
     const location = useLocation();
 
@@ -44,5 +44,10 @@ function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element 
         </Link>
     )
 }
+
+
+IngredientItem.propTypes = {
+    children: ingredientItem
+};
 
 export default IngredientItem;

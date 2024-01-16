@@ -3,24 +3,25 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useLazyLogoutQuery } from '../../hooks/useApi'
 import { setUser } from '../../services/actions/BurgerConstructor'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-export function Profile(): JSX.Element {
+export function Profile() {
     const [trigger, data] = useLazyLogoutQuery();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (data && data.data?.success) {
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("accessToken");
-            dispatch(setUser(null));
-        }
+        if (data && data.data?.success) 
+            {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                dispatch(setUser(null));
+            }
     }, [data]);
 
-    const logOut = (e: SyntheticEvent) => {
+    const logOut = (e) => {
         e.preventDefault();
-        trigger(null);
+        trigger();
     }
 
     return (
@@ -32,7 +33,7 @@ export function Profile(): JSX.Element {
                 <NavLink to='orders' className={({ isActive }) => isActive ? styles.link_acitve : styles.link}>
                     <p className="text text_type_main-default">История заказов</p>
                 </NavLink>
-                <NavLink to='' className={styles.link} onClick={(e) => { logOut(e); }}>
+                <NavLink className={styles.link} onClick={(e) => {logOut(e);}}>
                     <p className="text text_type_main-default" >Выход</p>
                 </NavLink>
             </div>

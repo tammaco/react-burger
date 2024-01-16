@@ -2,13 +2,13 @@ import styles from './IngredientDetails.module.css';
 import { useGetIngredientsQuery } from '../../hooks/useApi'
 import { useParams } from 'react-router-dom';
 
-function IngredientDetails(): React.JSX.Element {
-    const { data: ingredients } = useGetIngredientsQuery(null);
+function IngredientDetails(props) {
+    const { data: ingredients } = useGetIngredientsQuery();
     const { ingredientId } = useParams();
 
-    const ingredient = ingredients ? ingredients.filter(x => x._id === ingredientId)[0] : null;
+    const ingredient = ingredients.filter(x => x._id === ingredientId)[0]
 
-    return (ingredient ?
+    return (ingredient &&
             <div className={styles.content}>
                 <img src={ingredient.image_large} alt={ingredient.name}></img>
                 <div className={styles.ingredient_name}>
@@ -32,7 +32,7 @@ function IngredientDetails(): React.JSX.Element {
                         <p className="text text_type_digits-default text_color_inactive">{ingredient.carbohydrates}</p>
                     </div>
                 </div>
-            </div> : <></>
+            </div>
     )
 }
 

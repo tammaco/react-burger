@@ -2,28 +2,28 @@
 import styles from './registration.module.css';
 import { EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { useForm } from '../../hooks/useForm'
 import { useLazyPasswordResetQuery } from '../../hooks/useApi'
 
 import { Link, useNavigate } from 'react-router-dom';
 
-export function ForgotPassword(): React.JSX.Element {
+export function ForgotPassword() {
     const { formData, handleInputChange } = useForm({ email: '' });
     const navigate = useNavigate();
-    const [trigger, data] = useLazyPasswordResetQuery();
+    const [trigger, { data }] = useLazyPasswordResetQuery();
 
     useEffect(() => {
         if (data && data.data?.success) {
-            localStorage.setItem("fromForgotPassword", 'true');
+            localStorage.setItem("fromForgotPassword", true);
             navigate('/reset-password');
         }
     }, [data])
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        trigger({email: formData.email});
+        trigger(formData.email);
     }
 
     return (
@@ -33,7 +33,7 @@ export function ForgotPassword(): React.JSX.Element {
             <form className={styles.form} onSubmit={onSubmit}>
                 <EmailInput
                     onChange={handleInputChange}
-                    value={formData.email || ''}
+                    value={formData.email}
                     name={'email'}
                     placeholder="Уажите Email"
                     extraClass="mb-6"

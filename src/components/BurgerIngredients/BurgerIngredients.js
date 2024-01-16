@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, ForwardedRef } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -7,30 +7,24 @@ import IngredientGroup from '../IngredientGroup/IngredientGroup'
 
 import { useGetIngredientsQuery } from '../../hooks/useApi'
 
-function BurgerIngredients(): React.JSX.Element {
+function BurgerIngredients(props) {
   const [current, setCurrent] = useState('bun');
   const [tabsRefOffSetTop, setTabsRefOffSetTop] = useState(0);
 
-  const tabsRef = useRef<HTMLDivElement | null>(null);
-  const bunRef: ForwardedRef<HTMLDivElement> = useRef(null);
-  const sauceRef: ForwardedRef<HTMLDivElement> = useRef(null);
-  const mainRef: ForwardedRef<HTMLDivElement> = useRef(null);
+  const tabsRef = useRef(null);
+  const bunRef = useRef(null);
+  const sauceRef = useRef(null);
+  const mainRef = useRef(null);
 
-  const { data: ingredients } = useGetIngredientsQuery(null);
+  const { data: ingredients } = useGetIngredientsQuery();
 
-  interface ITab {
-    id: number,
-    name: string,
-    type: string,
-  }
-
-  const tabs: ReadonlyArray<ITab> = [
+  const tabs = [
     { id: 1, name: "Булки", type: 'bun' },
     { id: 2, name: "Соусы", type: 'sauce' },
     { id: 3, name: "Начинки", type: 'main' }
   ];
 
-  useEffect(() => { setTabsRefOffSetTop(tabsRef?.current?.offsetTop || 0) }, [tabsRef])
+  useEffect(() => { setTabsRefOffSetTop(tabsRef.current.offsetTop) }, [tabsRef])
 
   const scrollHandler = useCallback(() => {
     if (bunRef?.current && sauceRef?.current && mainRef?.current) {
@@ -46,21 +40,20 @@ function BurgerIngredients(): React.JSX.Element {
     }
   }, []);
 
-  const tabClickHandler = useCallback((value: string) => {
+  const tabClickHandler = useCallback((value) => {
     let top = 0;
     switch (value) {
-      case 'bun': top = !bunRef.current ? 0 : Math.abs(tabsRefOffSetTop - bunRef.current.offsetTop); break;
-      case 'sauce': top = !sauceRef.current ? 0 : Math.abs(tabsRefOffSetTop - sauceRef.current.offsetTop); break;
-      case 'main': top = !mainRef.current ? 0 : Math.abs(tabsRefOffSetTop - mainRef.current.offsetTop); break;
+      case 'bun': top = Math.abs(tabsRefOffSetTop - bunRef.current.offsetTop); break;
+      case 'sauce': top = Math.abs(tabsRefOffSetTop - sauceRef.current.offsetTop); break;
+      case 'main': top = Math.abs(tabsRefOffSetTop - mainRef.current.offsetTop); break;
       default: top = 0;
     }
-    if (tabsRef.current)
-      tabsRef.current.scroll({ top: top, behavior: "smooth" });
+    tabsRef.current.scroll({ top: top, behavior: "smooth" });
     setCurrent(value);
   }, [tabsRefOffSetTop]);
 
 
-  const renderTab = useCallback((tab: ITab) => {
+  const renderTab = useCallback((tab) => {
     return (
       <Tab value={tab.type} key={tab.id} active={current === tab.type} onClick={tabClickHandler}>
         <p className="text text_type_main-small">{tab.name}</p>
@@ -79,20 +72,16 @@ function BurgerIngredients(): React.JSX.Element {
       </div>
 
       <div className={styles.ingredients} id='scroll-container' onScroll={scrollHandler} ref={tabsRef}>
-        {
-          ingredients && Array.isArray(ingredients) && <>
-            <IngredientGroup ref={bunRef}
-              tabName='Булки' items={ingredients.filter((item) => item.type === 'bun')}>
-            </IngredientGroup>
-            <IngredientGroup ref={sauceRef}
-              tabName='Соусы' items={ingredients.filter((item) => item.type === 'sauce')}>
-            </IngredientGroup>
-            <IngredientGroup ref={mainRef}
-              tabName='Начинки' items={ingredients.filter((item) => item.type === 'main')}>
-            </IngredientGroup>
-          </>
-        }
 
+        <IngredientGroup ref={bunRef}
+          tabName='Булки' items={ingredients.filter(item => item.type === 'bun')}>
+        </IngredientGroup>
+        <IngredientGroup ref={sauceRef}
+          tabName='Соусы' items={ingredients.filter(item => item.type === 'sauce')}>
+        </IngredientGroup>
+        <IngredientGroup ref={mainRef}
+          tabName='Начинки' items={ingredients.filter(item => item.type === 'main')}>
+        </IngredientGroup>
 
       </div>
     </section>

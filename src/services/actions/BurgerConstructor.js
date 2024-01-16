@@ -1,8 +1,7 @@
-import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, nanoid } from '@reduxjs/toolkit'
 import { getUser } from '../../hooks/useApi'
-import { IIngredientItem, IInitialState, IOrderDetail, IUser } from '../../utils/types'
 
-const initialState: IInitialState = {
+const initialState = {
     bun: null,
     items: [],
     orderDetails: [],
@@ -11,8 +10,6 @@ const initialState: IInitialState = {
 };
 
 const token = localStorage.getItem('accessToken') || null;
-
-//@ts-ignore
 const result = await getUser();
 
 const burgerConstructor = createSlice({
@@ -20,38 +17,34 @@ const burgerConstructor = createSlice({
     initialState,
     reducers: {
         addBun: {
-            reducer: (state, action: PayloadAction<IIngredientItem>) => {
+            reducer: (state, action) => {
                 const item = action.payload;
-                if (state && state.bun)
-                    state.orderDetails.filter((x) => x._id !== state.bun?._id);
+                if (state.bun)
+                    state.orderDetails = state.orderDetails.filter((x) => x._id !== state.bun._id);
 
                 state.bun = item;
-                const bunItem: IOrderDetail = { _id: item._id, quantity: 2, price: item.price };
-                state.orderDetails = [...state.orderDetails, bunItem];
-            },
-            //@ts-ignore
-            prepare: (item: IIngredientItem) => {
-                return { payload: { ...item, key: nanoid() } };
-            }
-        },
-        addItem: {
-            reducer: (state, action: PayloadAction<IIngredientItem>) => {
-                const item = action.payload;
-                state.items = [...state.items, item];
-
-                const existingItem = state.orderDetails.find(x => x._id === item._id);
-                if (existingItem) {
-                    const ind = state.orderDetails.findIndex(x => x._id === item._id);
-                    state.orderDetails.splice(ind, 1, { _id: item._id, quantity: existingItem.quantity + 1, price: item.price });
-                }
-                else
-                    state.orderDetails = [...state.orderDetails, { _id: item._id, quantity: 1, price: item.price }];
+                state.orderDetails.push({ _id: item._id, quantity: 2, price: item.price });
             },
             prepare: (item) => {
                 return { payload: { ...item, key: nanoid() } };
             }
         },
-        deleteItem: (state, action: PayloadAction<IIngredientItem>) => {
+        addItem: {
+            reducer: (state, action) => {
+                const item = action.payload;
+                state.items.push(item);
+
+                const existingItem = state.orderDetails.find(x => x._id === item._id);
+                if (existingItem)
+                    state.orderDetails.splice(state.orderDetails.indexOf(existingItem), 1, { _id: item._id, quantity: existingItem.quantity + 1, price: item.price });
+                else
+                    state.orderDetails.push({ _id: item._id, quantity: 1, price: item.price });
+            },
+            prepare: (item) => {
+                return { payload: { ...item, key: nanoid() } };
+            }
+        },
+        deleteItem: (state, action) => {
             const item = action.payload;
             state.items = state.items.filter((x) => x.key !== item.key);
             state.orderDetails = state.orderDetails.filter((x) => x._id !== item._id);
@@ -71,11 +64,12 @@ const burgerConstructor = createSlice({
         setUser: (state, action) => {
             state.user = action.payload;
         },
-        setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
+        setIsAuthChecked: (state, action) => {
             state.isAuthChecked = action.payload;
         },
         checkUserAuth: (state) => {
             if (token) {
+
                 if (result?.success)
                     state.user = result.user;
 
