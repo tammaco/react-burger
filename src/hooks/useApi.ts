@@ -1,16 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { BaseQueryApi, FetchArgs, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { IIngredientItem, IOrderDetails, IResponse, IResponseOrder, IResponseTokens, IResponseUser, IResponseUserApi, IToken, IUser, IUserApi, isErrorWithMessage } from '../utils/types';
 
 import {
   BASE_URL, TOKEN_URL, PASSWORD_RESET_URL, PASSWORD_RESET_RESET_URL, LOG_OUT_URL
   , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL
 } from '../utils/constatnts'
 
-const setTokens = (refreshToken, accessToken) => {
+const setTokens = (refreshToken: string, accessToken: string) => {
   localStorage.setItem("refreshToken", refreshToken);
   localStorage.setItem("accessToken", accessToken);
 }
 
-const checkReponse = (res) => {
+const checkReponse = (res: Response) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
@@ -59,15 +60,15 @@ const baseQueryWithAccessToken = fetchBaseQuery({
   }
 });
 
-const baseQueryWithReauth = async (args, api, extraOptions) => {
+const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: { needAccessToken?: boolean; }) => {
   let result = null;
   if (!extraOptions?.needAccessToken)
     result = await baseQuery(args, api, extraOptions);
   else {
     result = await baseQueryWithAccessToken(args, api, extraOptions);
-    if (result.error && result.error.data?.message === "jwt expired") {
+    if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
       // try to get a new token
-      const refreshResult = await refreshToken();
+      const refreshResult:IResponseTokens = await refreshToken();
       if (refreshResult.success) {
         // store the new token
         setTokens(refreshResult.refreshToken, refreshResult.accessToken)
@@ -88,17 +89,17 @@ export const burgerApi = createApi({
         url: `${INGREDIENTS_URL}`,
         method: 'GET'
       }),
-      transformResponse: (response) => response.data ?? []
+      transformResponse: (response: IResponse<Array<IIngredientItem>>) => response.data ?? []
     }),
-    sendOrder: builder.query({
-      query: (arg) => ({
+    sendOrder: builder.query<IResponseOrder, IOrderDetails>({
+      query: (arg: IOrderDetails) => ({
         url: `${ORDERS_URL}`,
         method: 'POST',
-        body: { 'ingredients': arg }
+        body: { 'ingredients': arg.orderItemIds }
       }),
       extraOptions: { needAccessToken: true }
     }),
-    updateUser: builder.query({
+    updateUser: builder.query<IResponseUser, IUser>({
       query: (arg) => ({
         url: `${USER_URL}`,
         method: 'PATCH',
@@ -106,12 +107,12 @@ export const burgerApi = createApi({
       }),
       extraOptions: { needAccessToken: true }
     }),
-    login: builder.query({
-      query: (arg) => ({
+    login: builder.query<IResponseUserApi, IUser>({
+      query: (arg: IUser) => ({
         url: `${LOGIN_URL}`,
         method: 'POST',
         body: arg
-      }),
+      })
     }),
     register: builder.query({
       query: (arg) => ({
@@ -120,34 +121,27 @@ export const burgerApi = createApi({
         body: arg
       }),
     }),
-    logout: builder.query({
+    logout: builder.query<IResponse<null>, null>({
       query: () => ({
         url: `${LOG_OUT_URL}`,
         method: 'POST',
         body: { token: localStorage.getItem("refreshToken") }
       })
     }),
-    passwordReset: builder.query({
+    passwordReset: builder.query<IResponse<null>, IUser>({
       query: (arg) => ({
         url: `${PASSWORD_RESET_URL}`,
         method: 'POST',
-        body: { "email": arg }
+        body: arg
       }),
     }),
-    passwordResetReset: builder.query({
+    passwordResetReset: builder.query<IResponse<null>, IUser>({
       query: (arg) => ({
         url: `${PASSWORD_RESET_RESET_URL}`,
         method: 'POST',
         body: arg
       }),
-    }),
-    token: builder.query({
-      query: () => ({
-        url: `${TOKEN_URL}`,
-        method: 'POST',
-        body: { token: localStorage.getItem("refreshToken") }
-      }),
-    }),
+    })
   }),
 });
 

@@ -4,32 +4,33 @@ import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer
 import { useForm } from '../../hooks/useForm'
 import { useLazyLoginQuery } from '../../hooks/useApi'
 
-import { useEffect } from 'react'
+import { SyntheticEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Link } from 'react-router-dom';
 
 import { setUser, setIsAuthChecked } from '../../services/actions/BurgerConstructor'
+import { isErrorWithMessage } from '../../utils/types';
 
-export function Login() {
+export function Login(): React.JSX.Element {
     const { formData, handleInputChange } = useForm({
         email: '',
         password: '',
     });
     const dispatch = useDispatch();
     const { email, password } = formData;
-    const [trigger, data] = useLazyLoginQuery();
+    const [trigger, result] = useLazyLoginQuery();
 
     useEffect(() => {
-        if (data && data.data?.success) {
-            localStorage.setItem("refreshToken", data.data.refreshToken);
-            localStorage.setItem("accessToken", data.data.accessToken);
-            dispatch(setUser(data.data.user));
+        if (result && result.data?.success) {
+            localStorage.setItem("refreshToken", result.data?.refreshToken);
+            localStorage.setItem("accessToken", result.data?.accessToken);
+            dispatch(setUser(result.data?.user));
             dispatch(setIsAuthChecked(true));
         }
-    }, [data])
+    }, [result])
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         trigger({ email, password });
     }
@@ -41,7 +42,7 @@ export function Login() {
             <form className={styles.form} onSubmit={onSubmit}>
                 <EmailInput
                     onChange={handleInputChange}
-                    value={email}
+                    value={email || ''}
                     name='email'
                     placeholder="Логин"
                     extraClass="mb-6"
@@ -49,15 +50,14 @@ export function Login() {
 
                 <PasswordInput
                     onChange={handleInputChange}
-                    value={password}
+                    value={password || ''}
                     name='password'
                     extraClass="mb-6"
                 />
 
                 <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Войти</Button>
             </form>
-
-            {data.isError && <p>Ошибка: {data.error?.data?.message}</p>}
+            {result.isError && <p>Ошибка: {isErrorWithMessage(result.error) ? result.error?.message : JSON.stringify(result.error)}</p>}
 
             <div className={styles.aditional_actions}>
                 <p className="text text_type_main-default text_color_inactive mr-1">Вы — новый пользователь?</p>

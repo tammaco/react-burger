@@ -4,13 +4,14 @@ import { EmailInput, Input, PasswordInput, Button } from '@ya.praktikum/react-de
 import { useForm } from '../../hooks/useForm'
 import { useLazyRegisterQuery } from '../../hooks/useApi'
 
-import { useEffect } from 'react'
+import { SyntheticEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 import { setUser, setIsAuthChecked } from '../../services/actions/BurgerConstructor'
+import { isErrorWithMessage } from '../../utils/types';
 
-export function Register() {
+export function Register(): React.JSX.Element {
     const { formData, handleInputChange } = useForm({
         userName: '',
         email: '',
@@ -22,14 +23,17 @@ export function Register() {
 
     useEffect(() => {
         if (data && data.data?.success) {
+             //@ts-ignore
             localStorage.setItem("refreshToken", data.refreshToken);
+             //@ts-ignore
             localStorage.setItem("accessToken", data.accessToken);
+             //@ts-ignore
             dispatch(setUser(data.user));
             dispatch(setIsAuthChecked(true));
         }
     }, [data])
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         trigger({ email: formData.email, password: formData.password, name: formData.userName });
     }
@@ -43,14 +47,14 @@ export function Register() {
                     type='text'
                     placeholder={'Имя'}
                     onChange={handleInputChange}
-                    value={formData.userName}
+                    value={formData.userName || ''}
                     name='userName'
                     extraClass="mb-6"
                 />
 
                 <EmailInput
                     onChange={handleInputChange}
-                    value={formData.email}
+                    value={formData.email || ''}
                     name='email'
                     placeholder="Логин"
                     extraClass="mb-6"
@@ -58,7 +62,7 @@ export function Register() {
 
                 <PasswordInput
                     onChange={handleInputChange}
-                    value={formData.password}
+                    value={formData.password || ''}
                     name='password'
                     extraClass="mb-6"
                 />
@@ -66,7 +70,7 @@ export function Register() {
                 <Button htmlType="submit" type="primary" extraClass="mb-20" size="large">Зарегистрироваться</Button>
             </form>
 
-            {data.isError && <p>Ошибка: {data.error?.data?.message}</p>}
+            {data.isError && <p>Ошибка: {isErrorWithMessage(data.error) ? data.error?.message : JSON.stringify(data.error)}</p>}
 
             <div className={styles.aditional_actions}>
                 <p className="text text_type_main-default text_color_inactive mr-1">Уже зарегистрированы?</p>
