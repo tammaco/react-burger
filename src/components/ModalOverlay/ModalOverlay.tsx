@@ -1,14 +1,17 @@
 import styles from './ModalOverlay.module.css';
-import PropTypes from 'prop-types';
 import React from 'react'
 
-function ModalOverlay({ onClose }) {
+interface IModalOverlayProps {
+    onClose: (() => void) | undefined;
+}
+
+function ModalOverlay({ onClose }: IModalOverlayProps) {
     const modalContainerRef = React.useRef(null);
 
     React.useEffect(() => {
-        const handleOverlayClick = (event) => {
-            event.preventDefault();
-            if (event.target === modalContainerRef.current) onClose();
+        const handleOverlayClick = (ev: MouseEvent) => {
+            ev.preventDefault();
+            if (ev.target === modalContainerRef.current && onClose) onClose();
         };
 
         document.body.addEventListener('click', handleOverlayClick);
@@ -22,9 +25,5 @@ function ModalOverlay({ onClose }) {
         <div className={styles.modal_overlay} ref={modalContainerRef}></div>
     )
 }
-
-ModalOverlay.propTypes = {
-    onClose: PropTypes.func.isRequired
-};
 
 export default ModalOverlay;

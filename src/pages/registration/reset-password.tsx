@@ -2,13 +2,13 @@
 import styles from './registration.module.css';
 import { PasswordInput, Input, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { useEffect } from 'react'
+import { SyntheticEvent, useEffect } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import { useForm } from '../../hooks/useForm'
 import { useLazyPasswordResetResetQuery } from '../../hooks/useApi'
 
-export function ResetPassword() {
+export function ResetPassword(): React.JSX.Element {
 
     const { formData, handleInputChange } = useForm({
         secretCode: '',
@@ -16,7 +16,7 @@ export function ResetPassword() {
     });
 
     const navigate = useNavigate();
-    const [trigger, { data }] = useLazyPasswordResetResetQuery();
+    const [trigger, data] = useLazyPasswordResetResetQuery();
 
     useEffect(() => {
         if (data && data.data?.success) {
@@ -25,7 +25,7 @@ export function ResetPassword() {
         }
     }, [data])
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         trigger({ password: formData.password, token: formData.secretCode });
     }
@@ -42,7 +42,7 @@ export function ResetPassword() {
                 <PasswordInput
                     placeholder={'Введите новый пароль'}
                     onChange={handleInputChange}
-                    value={formData.password}
+                    value={formData.password || ''}
                     name='password'
                     extraClass="mb-6"
                 />
@@ -51,7 +51,7 @@ export function ResetPassword() {
                     type='text'
                     placeholder={'Введите код из письма'}
                     onChange={handleInputChange}
-                    value={formData.secretCode}
+                    value={formData.secretCode || ''}
                     name='secretCode'
                     extraClass="mb-6"
                 />

@@ -1,9 +1,14 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { getUser, getIsAuthChecked } from '../services/selectors/BurgerConstructor'
-import { Loading } from '../components/loading';
+import { Loading } from './loading';
 import { useSelector } from 'react-redux'
 
-const Protected = ({ onlyUnAuth = false, element }) => {
+interface IProtectedProps {
+  onlyUnAuth?: boolean;
+  element: JSX.Element;
+}
+
+const Protected = ({ onlyUnAuth = false, element }: IProtectedProps): JSX.Element => {
   const isAuthChecked = useSelector(getIsAuthChecked);
   const user = useSelector(getUser);
   const location = useLocation();
@@ -22,5 +27,6 @@ const Protected = ({ onlyUnAuth = false, element }) => {
   return element;
 }
 
+
 export const OnlyAuth = Protected;
-export const OnlyUnAuth = ({element}) => <Protected onlyUnAuth={true} element={element} />
+export const OnlyUnAuth = ({ element }: IProtectedProps) => <Protected onlyUnAuth={true} element={element} />

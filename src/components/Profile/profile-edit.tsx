@@ -2,7 +2,7 @@
 import styles from './profile.module.css';
 import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { useEffect } from 'react'
+import { SyntheticEvent, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useForm } from '../../hooks/useForm'
@@ -11,7 +11,7 @@ import { useLazyUpdateUserQuery } from '../../hooks/useApi'
 import { getUser } from '../../services/selectors/BurgerConstructor'
 import { setUser } from '../../services/actions/BurgerConstructor'
 
-export function ProfileEdit() {
+export function ProfileEdit(): JSX.Element {
     const user = useSelector(getUser);
     const dispatch = useDispatch();
 
@@ -25,19 +25,19 @@ export function ProfileEdit() {
     const [trigger, { data }] = useLazyUpdateUserQuery();
 
     useEffect(() => {
-        if (data && data.data?.success) {
+        if (data && data.success) {
             dispatch(setUser(data.user));
             resetValues();
         }
     }, [data, user])
 
 
-    const cancelEdit = (e) => {
+    const cancelEdit = (e: SyntheticEvent) => {
         e.preventDefault();
         resetValues();
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         trigger({ email, password, name });
     }
@@ -49,13 +49,13 @@ export function ProfileEdit() {
                     type='text'
                     placeholder={'Имя'}
                     onChange={handleInputChange}
-                    value={name}
+                    value={name || ''}
                     name='name'
                     extraClass="mb-6"
                 />
                 <EmailInput
                     onChange={handleInputChange}
-                    value={email}
+                    value={email || ''}
                     name='email'
                     placeholder="Логин"
                     extraClass="mb-6"
@@ -63,7 +63,7 @@ export function ProfileEdit() {
 
                 <PasswordInput
                     onChange={handleInputChange}
-                    value={password}
+                    value={password || ''}
                     name='password'
                     placeholder="Пароль"
                     extraClass="mb-6"
