@@ -1,6 +1,6 @@
 import styles from './Modal.module.css';
 import ModalOverlay from '../ModalOverlay/ModalOverlay'
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { createPortal } from 'react-dom';
@@ -8,10 +8,9 @@ import { createPortal } from 'react-dom';
 interface IModalProps {
     header?: string;
     onClose: (() => void) | undefined;
-    children: JSX.Element | [JSX.Element]
 }
 
-function Modal({ onClose, header, children }: IModalProps) {
+function Modal({ onClose, header, children }: PropsWithChildren<IModalProps>) {
     const modalRoot: Element | null = document.querySelector("#react-modals");
 
     React.useEffect(() => {

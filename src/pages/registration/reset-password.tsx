@@ -2,7 +2,7 @@
 import styles from './registration.module.css';
 import { PasswordInput, Input, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { FormEvent, useEffect } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import { useForm } from '../../hooks/useForm'
@@ -25,7 +25,7 @@ export function ResetPassword(): React.JSX.Element {
         }
     }, [data])
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         trigger({ password: formData.password, token: formData.secretCode });
     }

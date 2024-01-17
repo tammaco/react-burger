@@ -4,7 +4,7 @@ import { EmailInput, Input, PasswordInput, Button } from '@ya.praktikum/react-de
 import { useForm } from '../../hooks/useForm'
 import { useLazyRegisterQuery } from '../../hooks/useApi'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { FormEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
@@ -23,17 +23,14 @@ export function Register(): React.JSX.Element {
 
     useEffect(() => {
         if (data && data.data?.success) {
-             //@ts-ignore
-            localStorage.setItem("refreshToken", data.refreshToken);
-             //@ts-ignore
-            localStorage.setItem("accessToken", data.accessToken);
-             //@ts-ignore
-            dispatch(setUser(data.user));
+            localStorage.setItem("refreshToken", data.data?.refreshToken);
+            localStorage.setItem("accessToken", data.data?.accessToken);
+            dispatch(setUser(data.data?.user));
             dispatch(setIsAuthChecked(true));
         }
     }, [data])
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         trigger({ email: formData.email, password: formData.password, name: formData.userName });
     }

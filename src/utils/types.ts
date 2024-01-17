@@ -15,8 +15,11 @@ export interface IIngredientItem {
     key?: number | undefined
 };
 
-export interface IDragObject {
-    index: number;
+export type TIngredientItem = Omit<IIngredientItem, "key">
+
+export interface IDragDrop {
+    dragIndex: number;
+    dropIndex: number 
 }
 
 export interface IOrderDetail {
@@ -29,15 +32,13 @@ export interface IInitialState {
     bun: IIngredientItem | null,
     items: IIngredientItem[] | [],
     orderDetails: IOrderDetail[] | [],
-    user: null,
+    user: IUser | null,
     isAuthChecked: boolean
 };
 
 export interface IOrderDetails {
     orderItemIds: string[]
 }
-
-export type TMoveItemFunction = (dragIndex: number | undefined, dropIndex: number | undefined) => void;
 
 export function isFetchBaseQueryError(
     error: unknown

@@ -4,7 +4,7 @@ import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer
 import { useForm } from '../../hooks/useForm'
 import { useLazyLoginQuery } from '../../hooks/useApi'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { FormEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Link } from 'react-router-dom';
@@ -30,7 +30,7 @@ export function Login(): React.JSX.Element {
         }
     }, [result])
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         trigger({ email, password });
     }

@@ -1,10 +1,12 @@
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { IIngredientItem, IDragObject, TMoveItemFunction } from '../../utils/types'
+import { IIngredientItem } from '../../utils/types'
 import styles from './ConstructorItem.module.css';
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
 import { deleteItem } from '../../services/actions/BurgerConstructor';
+
+type TMoveItemFunction = (dragIndex: number, dropIndex: number) => void;
 
 interface IConstructorItemProps {
     ingredient: IIngredientItem;
@@ -12,28 +14,30 @@ interface IConstructorItemProps {
     moveItem: TMoveItemFunction
 }
 
+interface IDragObject {
+    index: number;
+}
+
 function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps): React.JSX.Element {
     const ref = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
+    const [isHover, setIsHover] = useState(false);
 
-    function instanceOfIDragObject(item: any): item is IDragObject {
-        return true;
-    }
-
-    const [{ isHover }, drop] = useDrop({
+    const [, drop] = useDrop<IDragObject, unknown>({
         accept: 'ingredient',
-        collect: monitor => ({
-            isHover: monitor.isOver()
-        }),
-        hover(item: IDragObject | unknown, monitor: DropTargetMonitor) {
+        collect: monitor => {
+            setIsHover(monitor.isOver());
+        },
+        hover(item: IDragObject, monitor: DropTargetMonitor) {
             if (!ref.current)
                 return;
 
-            let dragIndex: number | undefined = 0;
-            if (instanceOfIDragObject(item))
-                dragIndex = item.index;
-
+            const dragIndex = item.index;
             const hoverIndex = index;
+
+            if (dragIndex === hoverIndex) {
+                return;
+            }
 
             const hoverBoundingRect = ref.current.getBoundingClientRect();
             const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -45,8 +49,7 @@ function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps)
             if (dragIndex && dragIndex > hoverIndex && hoverClientY > hoverMiddleY)
                 return;
             moveItem(dragIndex, hoverIndex);
-            if (instanceOfIDragObject(item))
-                item.index = hoverIndex;
+            item.index = hoverIndex;
         },
     });
 

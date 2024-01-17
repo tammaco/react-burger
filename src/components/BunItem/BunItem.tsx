@@ -3,22 +3,24 @@ import { useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
 import styles from '../BunItem/BunItem.module.css';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components'
-import { IIngredientItem } from '../../utils/types'
+import { TIngredientItem } from '../../utils/types'
+import { useState } from 'react';
 
 interface IBunItemProps {
-    bun: IIngredientItem;
+    bun: TIngredientItem;
     pos: 'top' | 'bottom'
 }
 
-export default function BunItem( { bun, pos } : IBunItemProps) : React.JSX.Element {
+export default function BunItem({ bun, pos }: IBunItemProps): React.JSX.Element {
     const dispatch = useDispatch();
+    const [isHover, setIsHover] = useState(false);
 
-    const [{ isHover }, refDrop] = useDrop({
+    const [, refDrop] = useDrop<TIngredientItem, unknown>({
         accept: "bun",
-        collect: monitor => ({
-            isHover: monitor.isOver(),
-        }),
-        drop(item) {
+        collect: monitor => {
+            setIsHover(monitor.isOver());
+        },
+        drop(item: TIngredientItem) {
             dispatch(addBun(item));
         },
     });
@@ -26,7 +28,7 @@ export default function BunItem( { bun, pos } : IBunItemProps) : React.JSX.Eleme
     return (
         bun ?
             (
-                
+
                 <div className={styles.bun} ref={refDrop}>
                     <ConstructorElement type={pos} isLocked={true} text={bun.name + ' (верх)'} price={bun.price} thumbnail={bun.image} />
                 </div>
