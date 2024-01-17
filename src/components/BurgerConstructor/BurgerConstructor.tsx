@@ -51,7 +51,7 @@ function BurgerConstructor() : React.JSX.Element  {
 
     const renderConstructorItem = useCallback((item: IIngredientItem, index: number) => {
         return (
-            <ConstructorItem key={item.key} item={item} index={index} moveItem={moveItem}></ConstructorItem>
+            <ConstructorItem key={item.key} ingredient={item} index={index} moveItem={moveItem}></ConstructorItem>
         )
     }, [moveItem]);
 
