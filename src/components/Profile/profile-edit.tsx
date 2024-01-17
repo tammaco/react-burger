@@ -2,7 +2,7 @@
 import styles from './profile.module.css';
 import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { FormEvent, SyntheticEvent, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useForm } from '../../hooks/useForm'
@@ -37,7 +37,7 @@ export function ProfileEdit(): JSX.Element {
         resetValues();
     }
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         trigger({ email, password, name });
     }

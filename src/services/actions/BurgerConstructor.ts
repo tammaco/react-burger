@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit'
 import { getUser } from '../../hooks/useApi'
-import { IIngredientItem, IInitialState, IOrderDetail, IUser } from '../../utils/types'
+import { IDragDrop, IIngredientItem, IInitialState, IOrderDetail, IUser, TIngredientItem } from '../../utils/types'
 
 const initialState: IInitialState = {
     bun: null,
@@ -11,8 +11,6 @@ const initialState: IInitialState = {
 };
 
 const token = localStorage.getItem('accessToken') || null;
-
-//@ts-ignore
 const result = await getUser();
 
 const burgerConstructor = createSlice({
@@ -20,7 +18,7 @@ const burgerConstructor = createSlice({
     initialState,
     reducers: {
         addBun: {
-            reducer: (state, action: PayloadAction<IIngredientItem>) => {
+            reducer: (state, action: PayloadAction<TIngredientItem>) => {
                 const item = action.payload;
                 if (state && state.bun)
                     state.orderDetails.filter((x) => x._id !== state.bun?._id);
@@ -29,13 +27,12 @@ const burgerConstructor = createSlice({
                 const bunItem: IOrderDetail = { _id: item._id, quantity: 2, price: item.price };
                 state.orderDetails = [...state.orderDetails, bunItem];
             },
-            //@ts-ignore
-            prepare: (item: IIngredientItem) => {
+            prepare: (item: TIngredientItem) => {
                 return { payload: { ...item, key: nanoid() } };
             }
         },
         addItem: {
-            reducer: (state, action: PayloadAction<IIngredientItem>) => {
+            reducer: (state, action: PayloadAction<TIngredientItem>) => {
                 const item = action.payload;
                 state.items = [...state.items, item];
 
@@ -47,7 +44,7 @@ const burgerConstructor = createSlice({
                 else
                     state.orderDetails = [...state.orderDetails, { _id: item._id, quantity: 1, price: item.price }];
             },
-            prepare: (item) => {
+            prepare: (item: IIngredientItem) => {
                 return { payload: { ...item, key: nanoid() } };
             }
         },
@@ -56,19 +53,18 @@ const burgerConstructor = createSlice({
             state.items = state.items.filter((x) => x.key !== item.key);
             state.orderDetails = state.orderDetails.filter((x) => x._id !== item._id);
         },
-        reset: (state) => state = {
-            ...state,
-            bun: null,
-            items: [],
-            orderDetails: []
+        reset: (state) => {
+            state.bun = null;
+            state.items = [];
+            state.orderDetails = [];
         },
-        swapItems: (state, action) => {
+        swapItems: (state, action: PayloadAction<IDragDrop>) => {
             const dragIndex = action.payload.dragIndex;
             const dropIndex = action.payload.dropIndex;
 
             state.items[dropIndex] = state.items.splice(dragIndex, 1, state.items[dropIndex])[0];
         },
-        setUser: (state, action) => {
+        setUser: (state, action: PayloadAction<IUser | null>) => {
             state.user = action.payload;
         },
         setIsAuthChecked: (state, action: PayloadAction<boolean>) => {

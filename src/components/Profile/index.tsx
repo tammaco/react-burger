@@ -3,7 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useLazyLogoutQuery } from '../../hooks/useApi'
 import { setUser } from '../../services/actions/BurgerConstructor'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { MouseEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 export function Profile(): JSX.Element {
@@ -18,7 +18,7 @@ export function Profile(): JSX.Element {
         }
     }, [data]);
 
-    const logOut = (e: SyntheticEvent) => {
+    const logOut = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         trigger(null);
     }

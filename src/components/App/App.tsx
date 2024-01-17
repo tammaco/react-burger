@@ -34,15 +34,13 @@ function App() {
   const background = location.state && location.state.background;
   const dispatch = useDispatch();
 
-  //@ts-ignore
-  const { isLoading: loading, error } = useGetIngredientsQuery();
+  const { isLoading: loading, error } = useGetIngredientsQuery(null);
 
   const handleModalClose = () => {
     navigate(-1);
   };
 
   useEffect(() => {
-    //@ts-ignore
     dispatch(checkUserAuth());
   }, [])
 

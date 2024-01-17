@@ -12,13 +12,13 @@ import { addItem, reset, swapItems } from '../../services/actions/BurgerConstruc
 import { getConstructorItems, getBun, getTotalCost, getUser } from '../../services/selectors/BurgerConstructor';
 import { useNavigate } from 'react-router-dom';
 
-import { IIngredientItem } from '../../utils/types'
+import { IDragDrop, IIngredientItem } from '../../utils/types'
 
 import { useDrop } from 'react-dnd'
 
-function BurgerConstructor() : React.JSX.Element  {
+function BurgerConstructor(): React.JSX.Element {
     const [orderItemIds, setOrderItemIds] = useState<string[]>([]);
-
+    const [isHover, setIsHover] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const items: [IIngredientItem] = useSelector(getConstructorItems);
@@ -35,16 +35,17 @@ function BurgerConstructor() : React.JSX.Element  {
     }, [bun, items])
 
     const moveItem = useCallback(
-        (dragIndex: number | undefined, dropIndex: number | undefined) => {
-            dispatch(swapItems({ dragIndex: dragIndex, dropIndex: dropIndex }));
+        (dragIndex: number, dropIndex: number) => {
+            const obj: IDragDrop = { dragIndex: dragIndex, dropIndex: dropIndex };
+            dispatch(swapItems(obj));
         }, [dispatch])
 
-    const [{ isHover }, dropItem] = useDrop({
+    const [, dropItem] = useDrop<IIngredientItem, unknown>({
         accept: "item",
-        collect: monitor => ({
-            isHover: monitor.isOver(),
-        }),
-        drop(item) {
+        collect: monitor => {
+            setIsHover(monitor.isOver());
+        },
+        drop(item: IIngredientItem) {
             dispatch(addItem(item));
         },
     });
@@ -62,7 +63,7 @@ function BurgerConstructor() : React.JSX.Element  {
         else openModal();
     }
 
-    const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset(null)) });
+    const { isModalOpen, openModal, closeModal } = useModal(() => { dispatch(reset()) });
 
     return (
         <section className={styles.layout}>

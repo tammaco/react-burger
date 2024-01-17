@@ -114,7 +114,7 @@ export const burgerApi = createApi({
         body: arg
       })
     }),
-    register: builder.query({
+    register: builder.query<IResponseUserApi, IUser>({
       query: (arg) => ({
         url: `${REGISTER_URL}`,
         method: 'POST',

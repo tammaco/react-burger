@@ -2,7 +2,7 @@
 import styles from './registration.module.css';
 import { EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 
-import { SyntheticEvent, useEffect } from 'react'
+import { FormEvent, useEffect } from 'react'
 
 import { useForm } from '../../hooks/useForm'
 import { useLazyPasswordResetQuery } from '../../hooks/useApi'
@@ -21,9 +21,9 @@ export function ForgotPassword(): React.JSX.Element {
         }
     }, [data])
 
-    const onSubmit = (e: SyntheticEvent) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        trigger({email: formData.email});
+        trigger({ email: formData.email });
     }
 
     return (
