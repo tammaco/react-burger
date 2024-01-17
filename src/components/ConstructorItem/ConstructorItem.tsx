@@ -2,17 +2,17 @@ import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burg
 import { IIngredientItem, IDragObject, TMoveItemFunction } from '../../utils/types'
 import styles from './ConstructorItem.module.css';
 import { useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
 import { deleteItem } from '../../services/actions/BurgerConstructor';
 
 interface IConstructorItemProps {
-    item: IIngredientItem;
+    ingredient: IIngredientItem;
     index: number;
     moveItem: TMoveItemFunction
 }
 
-function ConstructorItem({ item, index, moveItem }: IConstructorItemProps): React.JSX.Element {
+function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps): React.JSX.Element {
     const ref = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
 
@@ -20,12 +20,12 @@ function ConstructorItem({ item, index, moveItem }: IConstructorItemProps): Reac
         return true;
     }
 
-    const [isHover, drop] = useDrop({
+    const [{ isHover }, drop] = useDrop({
         accept: 'ingredient',
         collect: monitor => ({
             isHover: monitor.isOver()
         }),
-        hover(item: IDragObject | unknown, monitor) {
+        hover(item: IDragObject | unknown, monitor: DropTargetMonitor) {
             if (!ref.current)
                 return;
 
@@ -53,7 +53,7 @@ function ConstructorItem({ item, index, moveItem }: IConstructorItemProps): Reac
     const [, drag] = useDrag({
         type: 'ingredient',
         item: () => {
-            return { item, index, moveItem }
+            return { ingredient, index, moveItem }
         }
     });
 
@@ -66,10 +66,10 @@ function ConstructorItem({ item, index, moveItem }: IConstructorItemProps): Reac
             </div>
             <ConstructorElement
                 isLocked={false}
-                text={item.name}
-                price={item.price}
-                thumbnail={item.image}
-                handleClose={() => dispatch(deleteItem(item))} />
+                text={ingredient.name}
+                price={ingredient.price}
+                thumbnail={ingredient.image}
+                handleClose={() => dispatch(deleteItem(ingredient))} />
         </div>
     )
 }

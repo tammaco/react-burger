@@ -16,7 +16,7 @@ export interface IIngredientItem {
 };
 
 export interface IDragObject {
-    index?: number;
+    index: number;
 }
 
 export interface IOrderDetail {
