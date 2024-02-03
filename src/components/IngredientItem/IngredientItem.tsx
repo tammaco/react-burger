@@ -5,7 +5,7 @@ import { IIngredientItem } from '../../utils/types'
 import { useDrag } from 'react-dnd'
 
 import { useSelector } from 'react-redux'
-import { getOrderDetails } from '../../services/selectors/BurgerConstructor';
+import { getOrderDetails } from '../../services/selectors/constructorSelector';
 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element 
         className={styles.link}
       >
             <div className={styles.ingredient_item_content} ref={drag}>
-                {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
+                {count != undefined && count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
                 <img src={item.image} alt={item.name}></img>
                 <div className={styles.ingredient_item_price}>
                     <p className="text text_type_digits-default">{item.price}</p>

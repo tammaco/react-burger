@@ -8,7 +8,7 @@ import { FormEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
 
-import { setUser, setIsAuthChecked } from '../../services/actions/BurgerConstructor'
+import { setUser, setIsAuthChecked } from '../../services/slices/userSlice'
 import { isErrorWithMessage } from '../../utils/types';
 
 export function Register(): React.JSX.Element {

@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 
 interface IFormData { 
-  [name: string]: string; 
+  [name: string]: string | undefined; 
 }
 
 export const useForm = (initialState: IFormData) => {

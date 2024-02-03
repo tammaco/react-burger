@@ -8,16 +8,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from '../../hooks/useForm'
 import { useLazyUpdateUserQuery } from '../../hooks/useApi'
 
-import { getUser } from '../../services/selectors/BurgerConstructor'
-import { setUser } from '../../services/actions/BurgerConstructor'
+import { getUser } from '../../services/selectors/userSelector'
+import { setUser } from '../../services/slices/userSlice'
 
 export function ProfileEdit(): JSX.Element {
     const user = useSelector(getUser);
     const dispatch = useDispatch();
 
     const { formData, handleInputChange, resetValues, isChange } = useForm({
-        email: user.email,
-        name: user.name,
+        email: user ? user.email : undefined,
+        name: user ? user.name : undefined,
         password: '',
     });
 

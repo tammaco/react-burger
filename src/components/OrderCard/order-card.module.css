@@ -1,0 +1,50 @@
+.card {
+    border-radius: 40px;
+    gap: 24px;
+    display: flex;
+    box-shadow: 0px 0px 1px 0px #0000000A;
+    flex-direction: column;
+    background: #1C1C21;
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    margin: 12px;
+}
+
+.components {
+    display: flex;
+    height: 64px;
+    gap: 24px;
+    margin-bottom: 12px;
+    margin-left: 12px;
+}
+
+.ingredients {
+    display: flex;
+}
+
+.illustration_layout {
+    width: 112px;
+    height: 56px;
+    top: 4px;
+    left: -24px;
+}
+
+.illustration_additional {
+    width: 64px;
+    height: 64px;
+    opacity: 0.6px;
+}
+
+.illustration {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid #ba4cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

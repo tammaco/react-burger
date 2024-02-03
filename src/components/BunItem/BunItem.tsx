@@ -1,4 +1,4 @@
-import { addBun } from '../../services/actions/BurgerConstructor'
+import { addBun } from '../../services/slices/burgerSlice'
 import { useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
 import styles from '../BunItem/BunItem.module.css';

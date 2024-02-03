@@ -1,7 +1,7 @@
 import styles from './profile.module.css';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useLazyLogoutQuery } from '../../hooks/useApi'
-import { setUser } from '../../services/actions/BurgerConstructor'
+import { setUser } from '../../services/slices/userSlice'
 
 import { MouseEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'

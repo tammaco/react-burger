@@ -8,8 +8,9 @@ import ConstructorItem from '../ConstructorItem/ConstructorItem'
 import BunItem from '../BunItem/BunItem'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { addItem, reset, swapItems } from '../../services/actions/BurgerConstructor';
-import { getConstructorItems, getBun, getTotalCost, getUser } from '../../services/selectors/BurgerConstructor';
+import { addItem, reset, swapItems } from '../../services/slices/burgerSlice';
+import { getConstructorItems, getBun, getTotalCost } from '../../services/selectors/constructorSelector';
+import { getUser } from '../../services/selectors/userSelector';
 import { useNavigate } from 'react-router-dom';
 
 import { IDragDrop, IIngredientItem } from '../../utils/types'

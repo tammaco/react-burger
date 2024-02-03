@@ -4,7 +4,7 @@ import styles from './ConstructorItem.module.css';
 import { useRef, useState } from 'react'
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd'
 import { useDispatch } from 'react-redux'
-import { deleteItem } from '../../services/actions/BurgerConstructor';
+import { deleteItem } from '../../services/slices/burgerSlice';
 
 type TMoveItemFunction = (dragIndex: number, dropIndex: number) => void;
 

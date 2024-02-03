@@ -11,11 +11,11 @@ function AppHeader() : React.JSX.Element  {
         {({ isActive }) => {
           return isActive ?
             (<div className={styles.nav_link}>
-              {to === '/' ? <BurgerIcon type='primary' /> : to === '/orderfeed' ? <ListIcon type='primary' /> : <ProfileIcon type='primary' />}
+              {to === '/' ? <BurgerIcon type='primary' /> : to === '/feed' ? <ListIcon type='primary' /> : <ProfileIcon type='primary' />}
               <p className="text text_type_main-small">{caption}</p>
             </div>)
             : (<div className={styles.nav_link}>
-              {to === '/' ? <BurgerIcon type='secondary' /> : to === '/orderfeed' ? <ListIcon type='secondary' /> : <ProfileIcon type='secondary' />}
+              {to === '/' ? <BurgerIcon type='secondary' /> : to === '/feed' ? <ListIcon type='secondary' /> : <ProfileIcon type='secondary' />}
               <p className="text text_type_main-small">{caption}</p>
             </div>)
         }}
@@ -30,7 +30,7 @@ function AppHeader() : React.JSX.Element  {
       </div>
 
       <div className={styles.nav_link}>
-        {renderNavLink('/orderfeed', 'Лента заказов')}
+        {renderNavLink('/feed', 'Лента заказов')}
       </div>
 
       <Logo />

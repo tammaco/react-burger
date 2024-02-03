@@ -15,6 +15,10 @@ export interface IIngredientItem {
     key?: number | undefined
 };
 
+export interface IIngredientItemWithQ extends IIngredientItem {
+    quantity: number | undefined
+};
+
 export type TIngredientItem = Omit<IIngredientItem, "key">
 
 export interface IDragDrop {
@@ -27,14 +31,6 @@ export interface IOrderDetail {
     quantity: number,
     price: number,
 }
-
-export interface IInitialState {
-    bun: IIngredientItem | null,
-    items: IIngredientItem[] | [],
-    orderDetails: IOrderDetail[] | [],
-    user: IUser | null,
-    isAuthChecked: boolean
-};
 
 export interface IOrderDetails {
     orderItemIds: string[]
@@ -60,7 +56,6 @@ export function isErrorWithMessage(
 export interface IResponse<T> {
     success: boolean;
     message?: string;
-    name?: string;
     data?: T;
 }
 
@@ -84,25 +79,6 @@ export interface ITokensApi {
     accessToken: string;
 }
 
-interface IOwner {
-    name: string
-    email: string,
-    createdAt: Date,
-    updatedAt: Date
-}
-
-export interface IOrder {
-    ingredients: ReadonlyArray<IIngredientItem>;
-    _id: string;
-    owner: IOwner;
-    status: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    number: number;
-    price: number;
-}
-
 export interface IResponseTokens extends IResponse<null>, ITokensApi {
 
 }
@@ -115,6 +91,51 @@ export interface IResponseUser extends IResponse<null>, IUserApi {
 
 }
 
-export interface IResponseOrder extends IResponse<null> {
-    order: IOrder
+export interface IBaseOrder {
+    _id: string;
+    status: TOrderStatus;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    number: number;
 }
+
+interface IOwner {
+    name: string
+    email: string,
+    createdAt: Date,
+    updatedAt: Date
+}
+
+export interface IOrderList extends IBaseOrder {
+    ingredients: ReadonlyArray<IIngredientItem>;
+    owner: IOwner;
+    price: number;
+}
+
+export interface IResponseOrderList extends IResponse<null> {
+    name: string;
+    order: IOrderList
+}
+
+export interface IOrderFeedItem extends IBaseOrder {
+    ingredients: string[];
+}
+
+export interface IResponseOrderFeed extends IResponse<null> {
+    orders: IOrderFeedItem[];
+}
+
+export type TOrderStatus = "done" | "pending" | "created" | "canceled";
+
+interface IOrderStatusInfo {
+    name: string;
+    style: string;
+}
+
+export const MOrderStatuses: Map<TOrderStatus, IOrderStatusInfo> = new Map([
+    ['done', { name: 'Выполнен', style: 'text_color_inactive'}],
+    ['pending', { name: 'Готовится', style: ''}],
+    ['created', {name: 'Создан', style: '' }], 
+    ['canceled', {name: 'Создан', style: 'canceled' }]
+  ]);

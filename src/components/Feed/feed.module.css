@@ -1,6 +1,5 @@
 .layout {
+    padding-top: 40px;
     display: flex;
-    align-items: start;
     justify-content: center;
-    flex-direction: column;
 }

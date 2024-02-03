@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { getUser, getIsAuthChecked } from '../services/selectors/BurgerConstructor'
+import { getUser, getIsAuthChecked } from '../services/selectors/userSelector'
 import { Loading } from './loading';
 import { useSelector } from 'react-redux'
 

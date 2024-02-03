@@ -1,0 +1,14 @@
+.layout{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 48px;
+    margin-top: 52px;
+}
+
+.board {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}

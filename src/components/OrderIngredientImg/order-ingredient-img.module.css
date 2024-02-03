@@ -1,0 +1,14 @@
+.illustration {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid #ba4cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.illustration_img {
+    height: 64px;
+    position: relative;
+}
