@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import styles from './order-header.module.css';
-import { IOrderFeedItem, MOrderStatuses, TOrderStatus } from '../../utils/types';
+import { IOrderFeedItem, MOrderStatuses, TOrderStatus } from '../../../utils/types';
 
 export function OrderHeader({order} : { order: IOrderFeedItem }): React.JSX.Element {
     

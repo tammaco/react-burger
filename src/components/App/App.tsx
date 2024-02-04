@@ -6,7 +6,7 @@ import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import Modal from '../Modal/Modal'
 import { Profile } from '../Profile/index'
 import { ProfileEdit } from '../Profile/profile-edit'
-import { OrderFeed } from '../OrderFeed/order-feed'
+import { OrderFeed } from '../Orders/OrderFeed/order-feed'
 
 import { NotFound404 } from '../../pages/not-found/not-found'
 import { Login } from '../../pages/registration/login'
@@ -26,7 +26,8 @@ import { checkUserAuth } from '../../services/slices/userSlice'
 
 import { OnlyUnAuth, OnlyAuth } from '../protected-route'
 import { Feed } from '../Feed/feed';
-import { OrderInfo } from '../OrderInfo/order-info';
+import { OrderInfo } from '../Orders/OrderInfo/order-info';
+import { setIngredients } from '../../services/slices/burgerSlice';
 
 function App() {
   const location = useLocation();
@@ -37,7 +38,7 @@ function App() {
   const matchFeed = useMatch('/feed/:number');
   const matchOrder = useMatch('/profile/orders/:number');
 
-  const { isLoading: loading, error } = useGetIngredientsQuery(null);
+  const { isLoading: loading, error, data: ingredients } = useGetIngredientsQuery(null);
 
   const handleModalClose = () => {
     navigate(-1);
@@ -45,7 +46,9 @@ function App() {
 
   useEffect(() => {
     dispatch(checkUserAuth());
-  }, [])
+    if (ingredients)
+      dispatch(setIngredients(ingredients))
+  }, [ingredients])
 
   if (loading)
     return <Loading isLoading={true} />

@@ -26,6 +26,34 @@
     display: flex;
 }
 
+.ingredient:nth-child(2) {
+    transform: translateX(-15px);
+   
+}
+
+.ingredient:nth-child(3) {
+    transform: translateX(-30px);
+   
+}
+
+.ingredient:nth-child(4) {
+    transform: translateX(-45px);
+   
+}
+
+.ingredient:nth-child(5) {
+    transform: translateX(-60px);
+   
+}
+
+.ingredient:nth-child(6) {
+    transform: translateX(-75px);
+}
+
+.ingredient:nth-child(7) {
+    transform: translateX(-90px);
+}
+
 .illustration_layout {
     width: 112px;
     height: 56px;
@@ -47,4 +75,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: black;
 }

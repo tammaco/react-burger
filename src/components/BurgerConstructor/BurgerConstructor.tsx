@@ -3,7 +3,7 @@ import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useModal } from '../../hooks/useModal'
 import Modal from '../Modal/Modal'
-import OrderDetails from '../OrderDetails/OrderDetails'
+import OrderDetails from '../Orders/OrderDetails/OrderDetails'
 import ConstructorItem from '../ConstructorItem/ConstructorItem'
 import BunItem from '../BunItem/BunItem'
 

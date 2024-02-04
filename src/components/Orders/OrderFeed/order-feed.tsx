@@ -1,12 +1,16 @@
-import { useCallback } from "react";
-import { useGetProfileOrdersQuery } from "../../hooks/useApi";
+import { useCallback, useEffect, useState } from "react";
+import { useGetProfileOrdersQuery } from "../../../hooks/useApi";
 import styles from './order-feed.module.css';
-import { IOrderFeedItem } from "../../utils/types";
+import { IOrderFeedItem } from "../../../utils/types";
 import { OrderCard } from "../OrderCard/order-card";
 import { Link, useLocation, useMatch } from "react-router-dom";
+import { useGetAllOrdersQuery } from "../../../hooks/useSocket";
+import { ORDERS_ALL_URL, SOCKET_BASE_URL } from "../../../utils/constants";
 
 export function OrderFeed(): React.JSX.Element {
-    const { data: orders } = useGetProfileOrdersQuery(null);
+
+    const { data } = useGetAllOrdersQuery(SOCKET_BASE_URL + ORDERS_ALL_URL);
+
     const match = useMatch('/feed');
     const location = useLocation();
     
@@ -28,9 +32,9 @@ export function OrderFeed(): React.JSX.Element {
             { match &&  <div className={styles.title}>
                 <p className="text text_type_main-large">Лента заказов</p>
             </div> }
-            { orders !== undefined && Array.isArray(orders) && 
+            { data !== undefined && Array.isArray(data[0]?.orders) && 
                 <div className={styles.orders}>
-                    {orders.map((item, index) => renderOrderCard(item, index))}
+                    {data[0]?.orders.map((item, index) => renderOrderCard(item, index))}
                 </div>
             }
         </div>

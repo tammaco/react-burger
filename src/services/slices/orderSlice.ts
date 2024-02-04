@@ -5,14 +5,14 @@ import { IOrderFeedItem, IResponseOrderFeed } from '../../utils/types';
 export interface IOrdersInitialState {
     isEstablishingConnection: boolean;
     isConnected: boolean;
-    orders: IOrderFeedItem[];
+    feedOrders: IOrderFeedItem[];
     currentOrder: IOrderFeedItem | null;
   }
    
   const initialState: IOrdersInitialState = {
     isEstablishingConnection: false,
     isConnected: false,
-    orders: [],
+    feedOrders: [],
     currentOrder: null
   };
    
@@ -27,16 +27,25 @@ export interface IOrdersInitialState {
         state.isConnected = true;
         state.isEstablishingConnection = true;
       }),
-      receiveAllOrders: ((state, action) => {
-        state.orders = action.payload.orders;
+      receiveAllOrders: ((state, action: PayloadAction<IResponseOrderFeed>) => {
+        state.feedOrders = action.payload.orders;
       }),
-      //
-      setCurrentOrder: (state, action: PayloadAction<IOrderFeedItem>) => {
-          state.currentOrder = action.payload;
-      },
+
+      /*receiveAllMessages: ((state, action: PayloadAction<{
+        messages: ChatMessage[]
+      }>) => {
+        state.messages = action.payload.messages;
+      }),
+      receiveMessage: ((state, action: PayloadAction<{
+        message: ChatMessage
+      }>) => {
+        state.messages.push(action.payload.message);
+      }),*/
+
+     
     },
   });
    
-  export const { setCurrentOrder } = orderSlice.actions;
+  export const orderActions = orderSlice.actions;
    
   export const reducer = orderSlice.reducer;

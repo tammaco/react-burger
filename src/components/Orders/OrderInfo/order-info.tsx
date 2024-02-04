@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useGetIngredientsQuery, useLazyGetOrderQuery } from "../../hooks/useApi";
+import { useGetIngredientsQuery, useLazyGetOrderQuery } from "../../../hooks/useApi";
 import { OrderCreateAt } from "../OrderCreateAt/order-create-at";
 import { OrderHeader } from "../OrderHeader/order-header";
 import { OrderTotalCost } from "../OrderTotalCost/order-total-cost";
 import styles from './order-info.module.css';
-import { IIngredientItemWithQ, IOrderFeedItem } from "../../utils/types";
+import { IIngredientItemWithQ, IOrderFeedItem } from "../../../utils/types";
 import { useLocation, useParams } from "react-router-dom";
 import { OrderIngredientImg } from "../OrderIngredientImg/order-ingredient-img";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -35,7 +35,7 @@ export function OrderInfo(): React.JSX.Element {
                         itemSet.add({ ...item, quantity: data.ingredients.filter(x => x === item._id).length});
                     });
                     setOrderIngredients(itemSet);
-                    setTotalCost(filteredItems.reduce(function (a, b) { return a + b.price }, 0));
+                    setTotalCost( Array.from(itemSet).reduce(function (a, b) { return a + b.price * (b.quantity || 0) }, 0));
                 }
             }
         }

@@ -10,4 +10,6 @@ export const USER_URL = '/auth/user';
 export const ORDERS_URL = '/orders';
 export const INGREDIENTS_URL = '/ingredients';
 
+export const ORDERS_ALL_URL = '/orders/all';
+
 export const SOCKET_BASE_URL = "wss://norma.nomoreparties.space"

@@ -124,6 +124,8 @@ export interface IOrderFeedItem extends IBaseOrder {
 
 export interface IResponseOrderFeed extends IResponse<null> {
     orders: IOrderFeedItem[];
+    total: number;
+    totalToday: number;
 }
 
 export type TOrderStatus = "done" | "pending" | "created" | "canceled";
@@ -139,3 +141,17 @@ export const MOrderStatuses: Map<TOrderStatus, IOrderStatusInfo> = new Map([
     ['created', {name: 'Создан', style: '' }], 
     ['canceled', {name: 'Создан', style: 'canceled' }]
   ]);
+
+
+  enum SocketEvent {
+    SendMessage = 'send_message',
+    RequestAllOrders = '/orders/all',
+    SendAllMessages = 'send_all_messages',
+    ReceiveOrder = '/order'
+  }
+   
+  export default SocketEvent;
+
+  export interface IDictionary<T> {
+    [key: string]: T;
+   }
