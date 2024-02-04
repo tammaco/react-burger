@@ -1,18 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
-import { useGetProfileOrdersQuery } from "../../../hooks/useApi";
+import { useCallback } from "react";
 import styles from './order-feed.module.css';
 import { IOrderFeedItem } from "../../../utils/types";
 import { OrderCard } from "../OrderCard/order-card";
 import { Link, useLocation, useMatch } from "react-router-dom";
 import { useGetAllOrdersQuery } from "../../../hooks/useSocket";
-import { ORDERS_ALL_URL, SOCKET_BASE_URL } from "../../../utils/constants";
+import { ORDERS_ALL_URL, ORDERS_URL, SOCKET_BASE_URL } from "../../../utils/constants";
 
 export function OrderFeed(): React.JSX.Element {
-
-    const { data } = useGetAllOrdersQuery(SOCKET_BASE_URL + ORDERS_ALL_URL);
-
     const match = useMatch('/feed');
     const location = useLocation();
+    const accessToken = localStorage.getItem("accessToken")?.replace("Bearer ", "") || '';
+    const { data } = useGetAllOrdersQuery(SOCKET_BASE_URL + (match ? ORDERS_ALL_URL : `${ORDERS_URL}?token=${accessToken}`));
     
     const renderOrderCard = useCallback((order: IOrderFeedItem, index: number) => {
         return (

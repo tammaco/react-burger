@@ -28,7 +28,6 @@
 
 .ingredient:nth-child(2) {
     transform: translateX(-15px);
-   
 }
 
 .ingredient:nth-child(3) {

@@ -3,7 +3,7 @@ import { IIngredientItem, IOrderDetails, IResponse, IResponseOrderFeed, IRespons
 
 import {
   BASE_URL, PASSWORD_RESET_URL, PASSWORD_RESET_RESET_URL, LOG_OUT_URL
-  , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL
+  , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL, ORDERS_ALL_URL
 } from '../utils/constants'
 
 import { refreshToken, setTokens } from '../utils/actions';
@@ -41,21 +41,41 @@ const baseQueryWithAccessToken = fetchBaseQuery({
   }
 });
 
+const baseQueryWithAccessTokenWS = fetchBaseQuery({
+  baseUrl: BASE_URL,
+  paramsSerializer: () => {
+    const searchParams = new URLSearchParams();
+    searchParams.append('token', localStorage.getItem("accessToken") ?? '');
+    return searchParams.toString();
+  }
+});
+
 const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: { needAccessToken?: boolean; }) => {
   let result = null;
   if (!extraOptions?.needAccessToken)
     result = await baseQuery(args, api, extraOptions);
   else {
-    result = await baseQueryWithAccessToken(args, api, extraOptions);
-    if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
-      // try to get a new token
-      const refreshResult: IResponseTokens = await refreshToken();
-      if (refreshResult.success) {
-        // store the new token
-        setTokens(refreshResult.refreshToken, refreshResult.accessToken)
-        // retry the initial query
-        result = await baseQueryWithAccessToken(args, api, extraOptions)
+    if (args === ORDERS_URL)
+    {
+      result = await baseQueryWithAccessTokenWS(args, api, extraOptions);
+      if (result.error && isErrorWithMessage(result.error) && result.error.message === "Invalid or missing token") {
+        const refreshResult: IResponseTokens = await refreshToken();
+        if (refreshResult.success) {
+          setTokens(refreshResult.refreshToken, refreshResult.accessToken)
+          result = await baseQueryWithAccessTokenWS(args, api, extraOptions)
+        }
       }
+    }
+    else
+    {
+      result = await baseQueryWithAccessToken(args, api, extraOptions);
+      if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
+        const refreshResult: IResponseTokens = await refreshToken();
+        if (refreshResult.success) {
+          setTokens(refreshResult.refreshToken, refreshResult.accessToken)
+          result = await baseQueryWithAccessToken(args, api, extraOptions)
+        }
+      }    
     }
   }
   return result

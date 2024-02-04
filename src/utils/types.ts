@@ -142,16 +142,6 @@ export const MOrderStatuses: Map<TOrderStatus, IOrderStatusInfo> = new Map([
     ['canceled', {name: 'Создан', style: 'canceled' }]
   ]);
 
-
-  enum SocketEvent {
-    SendMessage = 'send_message',
-    RequestAllOrders = '/orders/all',
-    SendAllMessages = 'send_all_messages',
-    ReceiveOrder = '/order'
-  }
-   
-  export default SocketEvent;
-
   export interface IDictionary<T> {
     [key: string]: T;
    }
