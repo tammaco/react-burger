@@ -3,7 +3,7 @@ import { IIngredientItem } from '../../utils/types'
 import styles from './ConstructorItem.module.css';
 import { useRef, useState } from 'react'
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../hooks'
 import { deleteItem } from '../../services/slices/burgerSlice';
 
 type TMoveItemFunction = (dragIndex: number, dropIndex: number) => void;
@@ -20,7 +20,7 @@ interface IDragObject {
 
 function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps): React.JSX.Element {
     const ref = useRef<HTMLDivElement | null>(null);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [isHover, setIsHover] = useState(false);
 
     const [, drop] = useDrop<IDragObject, unknown>({

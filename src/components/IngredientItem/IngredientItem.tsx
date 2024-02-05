@@ -4,13 +4,13 @@ import { IIngredientItem } from '../../utils/types'
 
 import { useDrag } from 'react-dnd'
 
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '../hooks'
 import { getOrderDetails } from '../../services/selectors/constructorSelector';
 
 import { Link, useLocation } from 'react-router-dom';
 
 function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element {
-    const orderDetails = useSelector(getOrderDetails);
+    const orderDetails = useAppSelector(getOrderDetails);
     const count = orderDetails.find((x: { _id: string; }) => x._id === item._id)?.quantity;
     const ingredientId = item['_id'];
     const location = useLocation();

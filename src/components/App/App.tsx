@@ -21,7 +21,7 @@ import { Routes, Route, useLocation, useNavigate, useMatch, useParams } from 're
 import { useGetIngredientsQuery } from '../../hooks/useApi'
 
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../hooks'
 import { checkUserAuth } from '../../services/slices/userSlice'
 
 import { OnlyUnAuth, OnlyAuth } from '../protected-route'
@@ -32,7 +32,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state && location.state.background;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const matchFeed = useMatch('/feed/:number');
   const matchOrder = useMatch('/profile/orders/:number');

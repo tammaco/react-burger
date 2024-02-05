@@ -7,7 +7,7 @@ import OrderDetails from '../Orders/OrderDetails/OrderDetails'
 import ConstructorItem from '../ConstructorItem/ConstructorItem'
 import BunItem from '../BunItem/BunItem'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '../hooks'
 import { addItem, reset, swapItems } from '../../services/slices/burgerSlice';
 import { getConstructorItems, getBun, getTotalCost } from '../../services/selectors/constructorSelector';
 import { getUser } from '../../services/selectors/userSelector';
@@ -21,11 +21,11 @@ function BurgerConstructor(): React.JSX.Element {
     const [orderItemIds, setOrderItemIds] = useState<string[]>([]);
     const [isHover, setIsHover] = useState(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const items: [IIngredientItem] = useSelector(getConstructorItems);
-    const bun = useSelector(getBun);
-    const totalCost = useSelector(getTotalCost);
-    const user = useSelector(getUser);
+    const dispatch = useAppDispatch();
+    const items = useAppSelector(getConstructorItems);
+    const bun = useAppSelector(getBun);
+    const totalCost = useAppSelector(getTotalCost);
+    const user = useAppSelector(getUser);
 
     useMemo(() => {
         let ids: string[] = [];
@@ -68,7 +68,7 @@ function BurgerConstructor(): React.JSX.Element {
 
     return (
         <section className={styles.layout}>
-            <BunItem pos="top" bun={bun}></BunItem>
+            <BunItem pos="top" bun={bun}></BunItem> 
 
             <div className={`${styles.components} ${isHover ? styles.isHover : ''}`} ref={dropItem}>
                 {
@@ -84,7 +84,7 @@ function BurgerConstructor(): React.JSX.Element {
                 }
             </div>
 
-            <BunItem pos="bottom" bun={bun}></BunItem>
+            <BunItem pos="bottom" bun={bun}></BunItem> 
 
             <div className={styles.order_info}>
                 <div className={styles.price}>

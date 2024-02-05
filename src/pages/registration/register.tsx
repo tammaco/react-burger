@@ -5,7 +5,7 @@ import { useForm } from '../../hooks/useForm'
 import { useLazyRegisterQuery } from '../../hooks/useApi'
 
 import { FormEvent, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../../components/hooks'
 import { Link } from 'react-router-dom';
 
 import { setUser, setIsAuthChecked } from '../../services/slices/userSlice'
@@ -18,7 +18,7 @@ export function Register(): React.JSX.Element {
         password: '',
     });
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [trigger, data] = useLazyRegisterQuery();
 
     useEffect(() => {

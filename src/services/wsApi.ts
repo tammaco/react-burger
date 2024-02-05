@@ -1,10 +1,7 @@
 import {  IResponseOrderFeed, IResponseTokens } from "../utils/types";
 import { burgerApi } from '../hooks/useApi';
-import { createEntityAdapter } from "@reduxjs/toolkit";
 import { refreshToken, setTokens } from "../utils/actions";
 import { ORDERS_URL, SOCKET_BASE_URL } from "../utils/constants";
-
-const responseOrderAdapter = createEntityAdapter<IResponseOrderFeed>();
 
 const refershTokenWS = async () => {
   const refreshResult: IResponseTokens = await refreshToken();
@@ -12,6 +9,8 @@ const refershTokenWS = async () => {
           setTokens(refreshResult.refreshToken, refreshResult.accessToken);
   }
 }
+
+const RECONNECT_PERIOD = 3000;
 
 export const wsApi = burgerApi.injectEndpoints({
     endpoints: builder => ({
@@ -27,8 +26,7 @@ export const wsApi = burgerApi.injectEndpoints({
               const listener = async (event: MessageEvent) => {
                 const data = JSON.parse(event.data);
     
-                if (data?.message === "Invalid or missing token"){
-                  //REFRESH TOKEN!!!
+                if (data?.message === "Invalid or missing token") {
                   await refershTokenWS().then(() => {
                     let accessToken = localStorage.getItem("accessToken")?.replace("Bearer ", "") || '';
                     ws = new WebSocket(SOCKET_BASE_URL + `${ORDERS_URL}?token=${accessToken}`);
@@ -36,15 +34,26 @@ export const wsApi = burgerApi.injectEndpoints({
                 }
 
                 updateCachedData((draft) => {
-                    //responseOrderAdapter.setOne(draft, data)
                     Object.assign(draft, data)
                 });
               }
     
-              ws.addEventListener('message', listener)
+              ws.addEventListener('message', listener);
+
+              ws.onclose = () => {
+                if (ws) {
+                  ws.close()
+                  setTimeout(() => {
+                    ws = new WebSocket(arg);
+                  }, RECONNECT_PERIOD)
+                }
+              }
+
             } catch {
               ws.close();
             }
+
+            
 
             await cacheEntryRemoved;
         }

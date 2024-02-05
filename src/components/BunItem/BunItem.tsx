@@ -1,18 +1,18 @@
 import { addBun } from '../../services/slices/burgerSlice'
 import { useDrop } from 'react-dnd'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../hooks'
 import styles from '../BunItem/BunItem.module.css';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components'
 import { TIngredientItem } from '../../utils/types'
 import { useState } from 'react';
 
 interface IBunItemProps {
-    bun: TIngredientItem;
+    bun: TIngredientItem | null;
     pos: 'top' | 'bottom'
 }
 
 export default function BunItem({ bun, pos }: IBunItemProps): React.JSX.Element {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [isHover, setIsHover] = useState(false);
 
     const [, refDrop] = useDrop<TIngredientItem, unknown>({

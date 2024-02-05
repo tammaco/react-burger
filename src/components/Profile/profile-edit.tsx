@@ -3,7 +3,7 @@ import styles from './profile.module.css';
 import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { FormEvent, SyntheticEvent, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '../../components/hooks'
 
 import { useForm } from '../../hooks/useForm'
 import { useLazyUpdateUserQuery } from '../../hooks/useApi'
@@ -12,8 +12,8 @@ import { getUser } from '../../services/selectors/userSelector'
 import { setUser } from '../../services/slices/userSlice'
 
 export function ProfileEdit(): JSX.Element {
-    const user = useSelector(getUser);
-    const dispatch = useDispatch();
+    const user = useAppSelector(getUser);
+    const dispatch = useAppDispatch();
 
     const { formData, handleInputChange, resetValues, isChange } = useForm({
         email: user ? user.email : undefined,

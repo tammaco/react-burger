@@ -5,7 +5,7 @@ import { useForm } from '../../hooks/useForm'
 import { useLazyLoginQuery } from '../../hooks/useApi'
 
 import { FormEvent, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../../components/hooks'
 
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ export function Login(): React.JSX.Element {
         email: '',
         password: '',
     });
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { email, password } = formData;
     const [trigger, result] = useLazyLoginQuery();
 
