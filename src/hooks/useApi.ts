@@ -41,32 +41,12 @@ const baseQueryWithAccessToken = fetchBaseQuery({
   }
 });
 
-const baseQueryWithAccessTokenWS = fetchBaseQuery({
-  baseUrl: BASE_URL,
-  paramsSerializer: () => {
-    const searchParams = new URLSearchParams();
-    searchParams.append('token', localStorage.getItem("accessToken") ?? '');
-    return searchParams.toString();
-  }
-});
-
 const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: { needAccessToken?: boolean; }) => {
   let result = null;
-  if (!extraOptions?.needAccessToken)
+  if (!extraOptions?.needAccessToken) {
     result = await baseQuery(args, api, extraOptions);
-  else {
-    if (args === ORDERS_URL)
-    {
-      result = await baseQueryWithAccessTokenWS(args, api, extraOptions);
-      if (result.error && isErrorWithMessage(result.error) && result.error.message === "Invalid or missing token") {
-        const refreshResult: IResponseTokens = await refreshToken();
-        if (refreshResult.success) {
-          setTokens(refreshResult.refreshToken, refreshResult.accessToken)
-          result = await baseQueryWithAccessTokenWS(args, api, extraOptions)
-        }
-      }
-    }
-    else
+  }
+  else
     {
       result = await baseQueryWithAccessToken(args, api, extraOptions);
       if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
@@ -77,7 +57,6 @@ const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, 
         }
       }    
     }
-  }
   return result
 }
 
@@ -143,14 +122,6 @@ export const burgerApi = createApi({
         body: arg
       }),
     }),
-    getProfileOrders: builder.query({
-      query: () => ({
-        url: `${ORDERS_URL}`,
-        method: 'GET',
-      }),
-      extraOptions: { needAccessToken: true },
-      transformResponse: (response: IResponseOrderFeed) => response.orders ?? []
-    }),
     getOrder: builder.query({
       query: (arg: number) => ({
         url: `${ORDERS_URL}/${arg}`,
@@ -166,6 +137,5 @@ export const { useGetIngredientsQuery
   , useLazyUpdateUserQuery
   , useLazyPasswordResetQuery, useLazyPasswordResetResetQuery
   , useLazyLoginQuery, useLazyRegisterQuery, useLazyLogoutQuery 
-  , useGetProfileOrdersQuery
   , useLazyGetOrderQuery
 } = burgerApi;

@@ -128,6 +128,8 @@ export interface IResponseOrderFeed extends IResponse<null> {
     totalToday: number;
 }
 
+export type TResponseOrderFeed = IResponseOrderFeed;
+
 export type TOrderStatus = "done" | "pending" | "created" | "canceled";
 
 interface IOrderStatusInfo {

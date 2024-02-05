@@ -40,7 +40,7 @@ export function OrderCard({order} : { order: IOrderFeedItem }): React.JSX.Elemen
             <div className={styles.components}>
                 <div className={styles.ingredients}>
                     {orderIngredients.slice(0, VISIBLE_INGREDIENTS_COUNT).map((item, index) => 
-                        { return <div className={styles.ingredient} key={index}> <OrderIngredientImg item={item} /></div> })}
+                        { return <div className={`${styles.ingredient} ${styles.illustration}`} key={index}> <OrderIngredientImg item={item} /></div> })}
                     {
                         invisibleCount > 0 && 
                             <div className={`${styles.ingredient} ${styles.illustration}`}>

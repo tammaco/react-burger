@@ -25,7 +25,6 @@ import { useDispatch } from 'react-redux'
 import { checkUserAuth } from '../../services/slices/userSlice'
 
 import { OnlyUnAuth, OnlyAuth } from '../protected-route'
-import { Feed } from '../Feed/feed';
 import { OrderInfo } from '../Orders/OrderInfo/order-info';
 import { setIngredients } from '../../services/slices/burgerSlice';
 
@@ -71,7 +70,7 @@ function App() {
           <Route path="orders/:number" element={<OrderInfo />} />
         </Route>
 
-        <Route path="/feed" element={<Feed />} />
+        <Route path="/feed" element={<OrderFeed />} />
         <Route path="/feed/:number" element={<OrderInfo />} />
 
         <Route path="/login" element={<OnlyUnAuth element={<Login />} />} />

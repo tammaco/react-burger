@@ -1,4 +1,5 @@
 import { BASE_URL, TOKEN_URL } from "./constants";
+import { TResponseOrderFeed } from "./types";
 
 export const setTokens = (refreshToken: string, accessToken: string) => {
     localStorage.setItem("refreshToken", refreshToken);
@@ -20,3 +21,5 @@ export const setTokens = (refreshToken: string, accessToken: string) => {
       }),
     }).then(checkReponse);
   };
+
+  export const isValidOrder = (x: any): x is TResponseOrderFeed => x !== undefined && x !== null && Array.isArray(x.orders) && x.orders.length > 0;

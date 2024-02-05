@@ -21,6 +21,6 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   })
 }
 
-type Store = ReturnType<typeof setupStore>
+export type Store = ReturnType<typeof setupStore>
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = Store['dispatch']

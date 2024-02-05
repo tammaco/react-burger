@@ -10,6 +10,9 @@ import { OrderIngredientImg } from "../OrderIngredientImg/order-ingredient-img";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 export function OrderInfo(): React.JSX.Element {
+    const [trigger, { data: getOrder }] = useLazyGetOrderQuery();
+    const { number } = useParams();
+
     const [order, setOrder] = useState<IOrderFeedItem>();
     const [orderIngredients, setOrderIngredients] = useState<Set<IIngredientItemWithQ>>();
     const { data: ingredients } = useGetIngredientsQuery(null);
@@ -18,28 +21,27 @@ export function OrderInfo(): React.JSX.Element {
     const location = useLocation();
     const background = location.state && location.state.background;
     
-    const [trigger, { data }] = useLazyGetOrderQuery();
-    const { number } = useParams();
-    const orderNumber: number = Number(number);
-    
     useEffect(() => {  
-        trigger(orderNumber);
-        if (data) {
-            setOrder(data);
-            if (ingredients) {
-                const filteredItems = ingredients.filter(x => data.ingredients.indexOf(x._id) > -1);
+        if (number)
+        {
+            trigger(+number);
+            if (getOrder) 
+                setOrder(getOrder);
+
+            if (order && ingredients) {
+                const filteredItems = ingredients.filter(x => order.ingredients.indexOf(x._id) > -1);
                 if (filteredItems && filteredItems.length > 0)
                 {
                     let itemSet = new Set<IIngredientItemWithQ>;
                     filteredItems.map(item => {
-                        itemSet.add({ ...item, quantity: data.ingredients.filter(x => x === item._id).length});
+                        itemSet.add({ ...item, quantity: order.ingredients.filter(x => x === item._id).length});
                     });
                     setOrderIngredients(itemSet);
                     setTotalCost( Array.from(itemSet).reduce(function (a, b) { return a + b.price * (b.quantity || 0) }, 0));
                 }
             }
         }
-    }, [orderNumber, data]);
+    }, [number, getOrder, order]);
     
     return (
         <>

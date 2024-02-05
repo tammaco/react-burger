@@ -12,3 +12,11 @@
     justify-content: space-between;
     align-items: start;
 }
+
+.completed_columns {
+    display: flex;
+}
+
+.completed_column {
+    margin-right: 24px;
+}

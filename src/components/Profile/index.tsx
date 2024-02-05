@@ -1,6 +1,6 @@
 import styles from './profile.module.css';
 import { NavLink, Outlet } from 'react-router-dom';
-import { useLazyLogoutQuery } from '../../hooks/useApi'
+import { burgerApi, useLazyLogoutQuery } from '../../hooks/useApi'
 import { setUser } from '../../services/slices/userSlice'
 
 import { MouseEvent, useEffect } from 'react'
@@ -15,6 +15,7 @@ export function Profile(): JSX.Element {
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("accessToken");
             dispatch(setUser(null));
+            burgerApi.util.resetApiState();
         }
     }, [data]);
 

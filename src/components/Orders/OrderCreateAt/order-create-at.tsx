@@ -3,6 +3,7 @@ import styles from './order-create-at.module.css';
 
 export function OrderCreateAt({createdAt} : { createdAt: Date }): React.JSX.Element {
     const dayDiff: number = moment.duration(moment().endOf('day').diff(moment(createdAt))).days();
+    const dayDiffDiv = dayDiff % 10;
     let dateText = '';
     switch (dayDiff) {
         case 0:
@@ -12,7 +13,9 @@ export function OrderCreateAt({createdAt} : { createdAt: Date }): React.JSX.Elem
             dateText = 'Вчера'
             break;
         default:
-            dateText = dayDiff + ' дн' + ((dayDiff < 5 || dayDiff % 10 < 5) && dayDiff % 10 != 0  ? 'я' : 'ей') + ' назад'
+            dateText = dayDiff + ' ' +  
+                (dayDiff >= 11 && dayDiff <= 14 || dayDiffDiv === 0 || dayDiffDiv >= 5 && dayDiffDiv <= 19 ? 'дней' :  dayDiffDiv >= 2 && dayDiffDiv <= 4 ? 'дня' : 'день') 
+                + ' назад'
       }
       dateText += ', ' + moment(createdAt).format('HH:mm')
 
