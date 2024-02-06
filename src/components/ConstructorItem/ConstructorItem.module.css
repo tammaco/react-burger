@@ -9,3 +9,7 @@
     display: flex;
     align-items: center;
 }
+
+.ingredient_is_over {
+    padding-top: 80px;
+}

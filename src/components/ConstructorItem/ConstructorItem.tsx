@@ -22,6 +22,7 @@ function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps)
     const ref = useRef<HTMLDivElement | null>(null);
     const dispatch = useAppDispatch();
     const [isHover, setIsHover] = useState(false);
+    const [isDrag, setIsDrag] = useState(false);
 
     const [, drop] = useDrop<IDragObject, unknown>({
         accept: 'ingredient',
@@ -57,23 +58,31 @@ function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps)
         type: 'ingredient',
         item: () => {
             return { ingredient, index, moveItem }
-        }
+        },
+        collect: (monitor) => {
+            setIsDrag(monitor.isDragging());
+        },
+        options: {
+            dropEffect: 'copy',
+        },
     });
 
     drag(drop(ref));
 
     return (
-        <div className={`${isHover ? styles.isHover : ''} ${styles.layout}`}>
-            <div className={styles.move} ref={ref} >
-                <DragIcon type="primary" />
+        <>
+            <div className={` ${isDrag ? styles.ingredient_dragging : ''} ${isHover ? styles.ingredient_is_over : ''} ${styles.layout}`} ref={ref}>
+                <div className={styles.move} >
+                    <DragIcon type="primary" />
+                </div>
+                <ConstructorElement
+                    isLocked={false}
+                    text={ingredient.name}
+                    price={ingredient.price}
+                    thumbnail={ingredient.image}
+                    handleClose={() => dispatch(deleteItem(ingredient))} />
             </div>
-            <ConstructorElement
-                isLocked={false}
-                text={ingredient.name}
-                price={ingredient.price}
-                thumbnail={ingredient.image}
-                handleClose={() => dispatch(deleteItem(ingredient))} />
-        </div>
+        </>
     )
 }
 
