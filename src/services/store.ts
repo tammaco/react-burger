@@ -1,13 +1,17 @@
 import { combineReducers, configureStore, PreloadedState  } from '@reduxjs/toolkit'
 
-import { reducer as burgerConstructor } from './actions/BurgerConstructor';
+import { reducer as burgerReducer } from './slices/burgerSlice';
+import { reducer as userReducer } from './slices/userSlice';
+import { reducer as orderReducer } from './slices/orderSlice';
 
 import { burgerApi } from '../hooks/useApi'
 
 const rootReducer = combineReducers({
   [burgerApi.reducerPath]: burgerApi.reducer,
-  bconstructor: burgerConstructor
-})
+  bconstructor: burgerReducer,
+  user: userReducer,
+  order: orderReducer
+});
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
@@ -17,6 +21,6 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   })
 }
 
-type Store = ReturnType<typeof setupStore>
+export type Store = ReturnType<typeof setupStore>
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = Store['dispatch']

@@ -1,20 +1,21 @@
 import styles from './profile.module.css';
 import { NavLink, Outlet } from 'react-router-dom';
-import { useLazyLogoutQuery } from '../../hooks/useApi'
-import { setUser } from '../../services/actions/BurgerConstructor'
+import { burgerApi, useLazyLogoutQuery } from '../../hooks/useApi'
+import { setUser } from '../../services/slices/userSlice'
 
 import { MouseEvent, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../hooks'
 
 export function Profile(): JSX.Element {
     const [trigger, data] = useLazyLogoutQuery();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (data && data.data?.success) {
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("accessToken");
             dispatch(setUser(null));
+            burgerApi.util.resetApiState();
         }
     }, [data]);
 

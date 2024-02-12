@@ -6,9 +6,7 @@ import IngredientDetails from '../IngredientDetails/IngredientDetails'
 import Modal from '../Modal/Modal'
 import { Profile } from '../Profile/index'
 import { ProfileEdit } from '../Profile/profile-edit'
-import { OrderFeed } from '../OrderFeed/order-feed'
-import { OrdersHistory } from '../OrdersHistory/orders-history'
-import { Order } from '../Order/order'
+import { OrderFeed } from '../Orders/OrderFeed/order-feed'
 
 import { NotFound404 } from '../../pages/not-found/not-found'
 import { Login } from '../../pages/registration/login'
@@ -18,23 +16,28 @@ import { ResetPassword } from '../../pages/registration/reset-password'
 
 import { Loading } from '../loading';
 
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, useMatch, useParams } from 'react-router-dom';
 
 import { useGetIngredientsQuery } from '../../hooks/useApi'
 
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { checkUserAuth } from '../../services/actions/BurgerConstructor'
+import { useAppDispatch } from '../hooks'
+import { checkUserAuth } from '../../services/slices/userSlice'
 
 import { OnlyUnAuth, OnlyAuth } from '../protected-route'
+import { OrderInfo } from '../Orders/OrderInfo/order-info';
+import { setIngredients } from '../../services/slices/burgerSlice';
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state && location.state.background;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { isLoading: loading, error } = useGetIngredientsQuery(null);
+  const matchFeed = useMatch('/feed/:number');
+  const matchOrder = useMatch('/profile/orders/:number');
+
+  const { isLoading: loading, error, data: ingredients } = useGetIngredientsQuery(null);
 
   const handleModalClose = () => {
     navigate(-1);
@@ -42,7 +45,9 @@ function App() {
 
   useEffect(() => {
     dispatch(checkUserAuth());
-  }, [])
+    if (ingredients)
+      dispatch(setIngredients(ingredients))
+  }, [ingredients])
 
   if (loading)
     return <Loading isLoading={true} />
@@ -61,11 +66,12 @@ function App() {
         <Route path="/profile" element={<OnlyAuth element={<Profile />} />}>
           <Route index element={<ProfileEdit />} />
           <Route path="" element={<ProfileEdit />} />
-          <Route path="orders" element={<OrdersHistory />} />
-          <Route path="orders/:number" element={<Order />} />
+          <Route path="orders" element={<OrderFeed />} />
+          <Route path="orders/:number" element={<OrderInfo />} />
         </Route>
 
-        <Route path="/orderfeed" element={<OrderFeed />} />
+        <Route path="/feed" element={<OrderFeed />} />
+        <Route path="/feed/:number" element={<OrderInfo />} />
 
         <Route path="/login" element={<OnlyUnAuth element={<Login />} />} />
         <Route path="/register" element={<OnlyUnAuth element={<Register />} />} />
@@ -75,10 +81,25 @@ function App() {
       </Routes>
 
       {background && (
+        
         <Routes>
           <Route path='/ingredients/:ingredientId' element={
             <Modal onClose={handleModalClose}>
               <IngredientDetails />
+            </Modal>
+          }
+          />
+
+          <Route path='/feed/:number' element={
+            <Modal onClose={handleModalClose} header={'# ' + matchFeed?.params.number}>
+              <OrderInfo />
+            </Modal>
+          }
+          />
+
+          <Route path='/profile/orders/:number' element={
+            <Modal onClose={handleModalClose} header={'# ' + matchOrder?.params.number}>
+              <OrderInfo />
             </Modal>
           }
           />

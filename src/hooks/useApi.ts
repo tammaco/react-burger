@@ -1,31 +1,12 @@
 import { BaseQueryApi, FetchArgs, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IIngredientItem, IOrderDetails, IResponse, IResponseOrder, IResponseTokens, IResponseUser, IResponseUserApi, IToken, IUser, IUserApi, isErrorWithMessage } from '../utils/types';
+import { IIngredientItem, IOrderDetails, IResponse, IResponseOrderFeed, IResponseOrderList, IResponseTokens, IResponseUser, IResponseUserApi, IUser, isErrorWithMessage } from '../utils/types';
 
 import {
-  BASE_URL, TOKEN_URL, PASSWORD_RESET_URL, PASSWORD_RESET_RESET_URL, LOG_OUT_URL
-  , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL
-} from '../utils/constatnts'
+  BASE_URL, PASSWORD_RESET_URL, PASSWORD_RESET_RESET_URL, LOG_OUT_URL
+  , REGISTER_URL, LOGIN_URL, USER_URL, ORDERS_URL, INGREDIENTS_URL, ORDERS_ALL_URL
+} from '../utils/constants'
 
-const setTokens = (refreshToken: string, accessToken: string) => {
-  localStorage.setItem("refreshToken", refreshToken);
-  localStorage.setItem("accessToken", accessToken);
-}
-
-const checkReponse = (res: Response) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
-};
-
-const refreshToken = () => {
-  return fetch(`${BASE_URL}${TOKEN_URL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify({
-      token: localStorage.getItem("refreshToken"),
-    }),
-  }).then(checkReponse);
-};
+import { refreshToken, setTokens } from '../utils/actions';
 
 export const getUser = () => {
   const token = localStorage.getItem("accessToken");
@@ -62,21 +43,20 @@ const baseQueryWithAccessToken = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: { needAccessToken?: boolean; }) => {
   let result = null;
-  if (!extraOptions?.needAccessToken)
+  if (!extraOptions?.needAccessToken) {
     result = await baseQuery(args, api, extraOptions);
-  else {
-    result = await baseQueryWithAccessToken(args, api, extraOptions);
-    if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
-      // try to get a new token
-      const refreshResult:IResponseTokens = await refreshToken();
-      if (refreshResult.success) {
-        // store the new token
-        setTokens(refreshResult.refreshToken, refreshResult.accessToken)
-        // retry the initial query
-        result = await baseQueryWithAccessToken(args, api, extraOptions)
-      }
-    }
   }
+  else
+    {
+      result = await baseQueryWithAccessToken(args, api, extraOptions);
+      if (result.error && isErrorWithMessage(result.error) && result.error.message === "jwt expired") {
+        const refreshResult: IResponseTokens = await refreshToken();
+        if (refreshResult.success) {
+          setTokens(refreshResult.refreshToken, refreshResult.accessToken)
+          result = await baseQueryWithAccessToken(args, api, extraOptions)
+        }
+      }    
+    }
   return result
 }
 
@@ -91,7 +71,7 @@ export const burgerApi = createApi({
       }),
       transformResponse: (response: IResponse<Array<IIngredientItem>>) => response.data ?? []
     }),
-    sendOrder: builder.query<IResponseOrder, IOrderDetails>({
+    sendOrder: builder.query<IResponseOrderList, IOrderDetails>({
       query: (arg: IOrderDetails) => ({
         url: `${ORDERS_URL}`,
         method: 'POST',
@@ -141,11 +121,21 @@ export const burgerApi = createApi({
         method: 'POST',
         body: arg
       }),
-    })
+    }),
+    getOrder: builder.query({
+      query: (arg: number) => ({
+        url: `${ORDERS_URL}/${arg}`,
+        method: 'GET',
+      }),
+      transformResponse: (response: IResponseOrderFeed) => response.success ? response.orders[0] : null
+    }),
   }),
 });
 
-export const { useGetIngredientsQuery, useSendOrderQuery
+export const { useGetIngredientsQuery
+  , useSendOrderQuery
   , useLazyUpdateUserQuery
   , useLazyPasswordResetQuery, useLazyPasswordResetResetQuery
-  , useLazyLoginQuery, useLazyRegisterQuery, useLazyLogoutQuery } = burgerApi;
+  , useLazyLoginQuery, useLazyRegisterQuery, useLazyLogoutQuery 
+  , useLazyGetOrderQuery
+} = burgerApi;

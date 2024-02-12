@@ -1,19 +1,21 @@
 import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit'
-import { getUser } from '../../hooks/useApi'
-import { IDragDrop, IIngredientItem, IInitialState, IOrderDetail, IUser, TIngredientItem } from '../../utils/types'
+import { IDictionary, IDragDrop, IIngredientItem, IOrderDetail, TIngredientItem } from '../../utils/types'
 
-const initialState: IInitialState = {
-    bun: null,
-    items: [],
-    orderDetails: [],
-    user: null,
-    isAuthChecked: false
+interface IConstructorInitialState {
+    ingredients: IDictionary<IIngredientItem>[],
+    bun: IIngredientItem | null,
+    items: IIngredientItem[] | [],
+    orderDetails: IOrderDetail[]
 };
 
-const token = localStorage.getItem('accessToken') || null;
-const result = await getUser();
+const initialState: IConstructorInitialState = {
+    ingredients: [],
+    bun: null,
+    items: [],
+    orderDetails: []
+};
 
-const burgerConstructor = createSlice({
+const burgerSlice = createSlice({
     name: 'bconstructor',
     initialState,
     reducers: {
@@ -64,28 +66,16 @@ const burgerConstructor = createSlice({
 
             state.items[dropIndex] = state.items.splice(dragIndex, 1, state.items[dropIndex])[0];
         },
-        setUser: (state, action: PayloadAction<IUser | null>) => {
-            state.user = action.payload;
+        setIngredients: (state, action: PayloadAction<IIngredientItem[]>) => {
+            action.payload.forEach(x => {
+                const item: IDictionary<IIngredientItem> = {};
+                item[x._id] = x;
+                state.ingredients.push(item);
+            })
         },
-        setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
-            state.isAuthChecked = action.payload;
-        },
-        checkUserAuth: (state) => {
-            if (token) {
-                if (result?.success)
-                    state.user = result.user;
-
-                if (state.user === null) {
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
-                }
-            }
-            state.isAuthChecked = true;
-        }
     }
 })
 
-export const { addBun, addItem, deleteItem, reset, swapItems, setUser, setIsAuthChecked, checkUserAuth } = burgerConstructor.actions;
+export const { addBun, addItem, deleteItem, reset, swapItems, setIngredients } = burgerSlice.actions;
 
-export const reducer = burgerConstructor.reducer
-
+export const reducer = burgerSlice.reducer

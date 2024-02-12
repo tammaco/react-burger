@@ -1,8 +1,8 @@
 import styles from './OrderDetails.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { useSendOrderQuery } from '../../hooks/useApi'
-import { Loading } from '../loading';
-import { IOrderDetails } from '../../utils/types';
+import { useSendOrderQuery } from '../../../hooks/useApi'
+import { Loading } from '../../loading';
+import { IOrderDetails } from '../../../utils/types';
 
 function OrderDetails(orderItemIds: IOrderDetails) : React.JSX.Element {
     const { isLoading: loading, error, data } = useSendOrderQuery(orderItemIds);
