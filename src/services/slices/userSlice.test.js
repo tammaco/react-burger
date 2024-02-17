@@ -1,11 +1,7 @@
-import { reducer }  from '../slices/userSlice';
+import { reducer, initialState }  from '../slices/userSlice';
 import { setUser, setIsAuthChecked, checkUserAuth }  from '../slices/userSlice';
 
 describe("tests for userSlice", () => {
-    const initialState = {
-        user: null,
-        isAuthChecked: false
-    };
 
     test('should return the initial state', () => {
         expect(reducer(undefined, { })).toEqual(initialState)
