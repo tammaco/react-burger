@@ -71,6 +71,13 @@ export const burgerApi = createApi({
       }),
       transformResponse: (response: IResponse<Array<IIngredientItem>>) => response.data ?? []
     }),
+    getUser: builder.query<IUser | null, null>({
+      query: () => ({
+        url: `${USER_URL}`,
+        method: 'GET'
+      }),
+      extraOptions: { needAccessToken: true }
+    }),
     sendOrder: builder.query<IResponseOrderList, IOrderDetails>({
       query: (arg: IOrderDetails) => ({
         url: `${ORDERS_URL}`,
@@ -132,7 +139,7 @@ export const burgerApi = createApi({
   }),
 });
 
-export const { useGetIngredientsQuery
+export const { useGetIngredientsQuery, useGetUserQuery
   , useSendOrderQuery
   , useLazyUpdateUserQuery
   , useLazyPasswordResetQuery, useLazyPasswordResetResetQuery

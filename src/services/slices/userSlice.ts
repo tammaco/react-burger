@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { getUser } from '../../hooks/useApi'
 import { IUser } from '../../utils/types'
 
 interface IUserInitialState {
@@ -13,7 +12,6 @@ const initialState: IUserInitialState = {
 };
 
 const token = localStorage.getItem('accessToken') || null;
-const result = await getUser();
 
 const userSlice = createSlice({
     name: 'user',
@@ -27,9 +25,6 @@ const userSlice = createSlice({
         },
         checkUserAuth: (state) => {
             if (token) {
-                if (result?.success)
-                    state.user = result.user;
-
                 if (state.user === null) {
                     localStorage.removeItem("accessToken");
                     localStorage.removeItem("refreshToken");

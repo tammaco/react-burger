@@ -12,7 +12,7 @@ function IngredientDetails(): React.JSX.Element {
             <div className={styles.content}>
                 <img src={ingredient.image_large} alt={ingredient.name}></img>
                 <div className={styles.ingredient_name}>
-                    <p className="text text_type_main-medium">{ingredient.name}</p>
+                    <p className="text text_type_main-medium" data-testid="ingredient_name">{ingredient.name}</p>
                 </div>
                 <div className={styles.nutrition_values}>
                     <div className={styles.value}>

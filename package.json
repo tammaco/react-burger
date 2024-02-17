@@ -1,5 +1,6 @@
 {
   "name": "react-burger",
+  "homepage": "http://yefremova.students.nomoredomainswork.ru/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -46,9 +48,15 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18"
+    "@types/react-dom": "^18.2.18",
+    "cypress": "^13.6.4",
+    "fetch-mock": "^9.11.0",
+    "jest": "^27.5.1",
+    "react-test-renderer": "^18.2.0",
+    "redux-mock-store": "^1.5.4"
   }
 }

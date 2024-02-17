@@ -2,15 +2,13 @@ import { combineReducers, configureStore, PreloadedState  } from '@reduxjs/toolk
 
 import { reducer as burgerReducer } from './slices/burgerSlice';
 import { reducer as userReducer } from './slices/userSlice';
-import { reducer as orderReducer } from './slices/orderSlice';
 
 import { burgerApi } from '../hooks/useApi'
 
 const rootReducer = combineReducers({
   [burgerApi.reducerPath]: burgerApi.reducer,
   bconstructor: burgerReducer,
-  user: userReducer,
-  order: orderReducer
+  user: userReducer
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

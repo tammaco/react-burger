@@ -71,7 +71,7 @@ function ConstructorItem({ ingredient, index, moveItem }: IConstructorItemProps)
 
     return (
         <>
-            <div className={` ${isDrag ? styles.ingredient_dragging : ''} ${isHover ? styles.ingredient_is_over : ''} ${styles.layout}`} ref={ref}>
+            <div data-testid="item_element" className={` ${isDrag ? styles.ingredient_dragging : ''} ${isHover ? styles.ingredient_is_over : ''} ${styles.layout}`} ref={ref}>
                 <div className={styles.move} >
                     <DragIcon type="primary" />
                 </div>

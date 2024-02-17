@@ -65,17 +65,10 @@ const burgerSlice = createSlice({
             const dropIndex = action.payload.dropIndex;
 
             state.items[dropIndex] = state.items.splice(dragIndex, 1, state.items[dropIndex])[0];
-        },
-        setIngredients: (state, action: PayloadAction<IIngredientItem[]>) => {
-            action.payload.forEach(x => {
-                const item: IDictionary<IIngredientItem> = {};
-                item[x._id] = x;
-                state.ingredients.push(item);
-            })
-        },
+        }
     }
 })
 
-export const { addBun, addItem, deleteItem, reset, swapItems, setIngredients } = burgerSlice.actions;
+export const { addBun, addItem, deleteItem, reset, swapItems } = burgerSlice.actions;
 
 export const reducer = burgerSlice.reducer

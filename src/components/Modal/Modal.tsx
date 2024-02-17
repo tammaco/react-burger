@@ -33,8 +33,8 @@ function Modal({ onClose, header, children }: PropsWithChildren<IModalProps>) {
                     <div className={styles.modal_title}>
                         <p className="text text_type_main-large">{header}</p>
                     </div>
-                    <div className={styles.modal_close_btn}>
-                        <CloseIcon type="primary" onClick={onClose} />
+                    <div className={styles.modal_close_btn} data-testid="modal_close_btn" onClick={onClose}>
+                        <CloseIcon type="primary" />
                     </div>
                 </div>
                 {children}

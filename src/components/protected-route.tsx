@@ -9,8 +9,9 @@ interface IProtectedProps {
 }
 
 const Protected = ({ onlyUnAuth = false, element }: IProtectedProps): JSX.Element => {
-  const isAuthChecked = useAppSelector(getIsAuthChecked);
   const user = useAppSelector(getUser);
+  const isAuthChecked = useAppSelector(getIsAuthChecked);
+  
   const location = useLocation();
 
   if (!isAuthChecked)
