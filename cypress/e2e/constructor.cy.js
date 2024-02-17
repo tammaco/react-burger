@@ -79,7 +79,7 @@ describe('ingredients modal works correctly', () => {
 })
 
 describe('order modal works correctly', () => {
-  it.only('should work order', () => {
+  it('should work order', () => {
     cy.prepareStore();
 
     cy.getBySel('react-modals').should('exist');
