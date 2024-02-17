@@ -70,7 +70,7 @@ function BurgerConstructor(): React.JSX.Element {
         <section className={styles.layout}>
             <BunItem pos="top" bun={bun}></BunItem> 
 
-            <div className={`${styles.components} ${isHover ? styles.isHover : ''}`} ref={dropItem}>
+            <div data-testid="item_container" className={`${styles.components} ${isHover ? styles.isHover : ''}`} ref={dropItem}>
                 {
                     items.length > 0
                         ? (items.map((item, index) => renderConstructorItem(item, index)))
@@ -91,7 +91,7 @@ function BurgerConstructor(): React.JSX.Element {
                     <p className="text text_type_digits-default">{totalCost}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large" disabled={!bun} onClick={onSubmit}>Оформить заказ</Button>
+                <Button data-testid="create_order_btn" htmlType="button" type="primary" size="large" disabled={!bun} onClick={onSubmit}>Оформить заказ</Button>
             </div>
             {isModalOpen && <Modal onClose={closeModal}><OrderDetails orderItemIds={orderItemIds} /></Modal>}
         </section>

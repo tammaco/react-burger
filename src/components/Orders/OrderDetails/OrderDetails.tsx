@@ -12,7 +12,7 @@ function OrderDetails(orderItemIds: IOrderDetails) : React.JSX.Element {
             { loading && <Loading isLoading={true} />}
             {!loading && error && <Loading isLoading={false} isError={true} /> }
             {!error && data?.order?.number &&
-                <><p className="text text_type_digits-large">{data?.order?.number}</p>
+                <><p className="text text_type_digits-large" data-testid="order_number">{data?.order?.number}</p>
                     <p className='pt-4 pb-15 text text_type_main-medium'>идентификатор заказа</p>
 
                     <div className={styles.done}>

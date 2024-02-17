@@ -29,13 +29,13 @@ export default function BunItem({ bun, pos }: IBunItemProps): React.JSX.Element 
         bun ?
             (
 
-                <div className={styles.bun} ref={refDrop}>
+                <div data-testid="bun_element" className={styles.bun} ref={refDrop}>
                     <ConstructorElement type={pos} isLocked={true} text={bun.name + ' (верх)'} price={bun.price} thumbnail={bun.image} />
                 </div>
             )
             :
             (
-                <div className={`${isHover ? styles.isHover : ''} ${styles.bun} constructor-element constructor-element_pos_${pos}`} ref={refDrop}>
+                <div data-testid="bun_container" className={`${isHover ? styles.isHover : ''} ${styles.bun} constructor-element constructor-element_pos_${pos}`} ref={refDrop}>
                     <span className="constructor-element__row"><span className={styles.constructor_cap_text}>Выберите булки</span></span>
                 </div>
             )

@@ -8,6 +8,7 @@ import { useAppSelector } from '../hooks'
 import { getOrderDetails } from '../../services/selectors/constructorSelector';
 
 import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
 
 function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element {
     const orderDetails = useAppSelector(getOrderDetails);
@@ -30,7 +31,7 @@ function IngredientItem({item} : { item: IIngredientItem }) : React.JSX.Element 
         state={{ background: location }}
         className={styles.link}
       >
-            <div className={styles.ingredient_item_content} ref={drag}>
+            <div className={styles.ingredient_item_content} data-testid={'ingredient_' + (item.type === "bun" ? "bun" : "item")} ref={drag}>
                 {count != undefined && count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
                 <img src={item.image} alt={item.name}></img>
                 <div className={styles.ingredient_item_price}>

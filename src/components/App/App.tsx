@@ -18,15 +18,14 @@ import { Loading } from '../loading';
 
 import { Routes, Route, useLocation, useNavigate, useMatch, useParams } from 'react-router-dom';
 
-import { useGetIngredientsQuery } from '../../hooks/useApi'
+import { useGetIngredientsQuery, useGetUserQuery } from '../../hooks/useApi'
 
 import { useEffect } from 'react'
 import { useAppDispatch } from '../hooks'
-import { checkUserAuth } from '../../services/slices/userSlice'
+import { checkUserAuth, setUser } from '../../services/slices/userSlice'
 
 import { OnlyUnAuth, OnlyAuth } from '../protected-route'
 import { OrderInfo } from '../Orders/OrderInfo/order-info';
-import { setIngredients } from '../../services/slices/burgerSlice';
 
 function App() {
   const location = useLocation();
@@ -38,16 +37,16 @@ function App() {
   const matchOrder = useMatch('/profile/orders/:number');
 
   const { isLoading: loading, error, data: ingredients } = useGetIngredientsQuery(null);
+  const { data: user } = useGetUserQuery(null);
 
   const handleModalClose = () => {
     navigate(-1);
   };
 
   useEffect(() => {
+    dispatch(setUser(user || null));
     dispatch(checkUserAuth());
-    if (ingredients)
-      dispatch(setIngredients(ingredients))
-  }, [ingredients])
+  }, [ingredients, user])
 
   if (loading)
     return <Loading isLoading={true} />
