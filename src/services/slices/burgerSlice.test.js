@@ -1,14 +1,7 @@
-import { reducer }  from '../slices/burgerSlice';
+import { reducer, initialState }  from '../slices/burgerSlice';
 import { addBun, addItem, deleteItem, reset, swapItems }  from '../slices/burgerSlice';
 
 describe("tests for burgerSlice", () => {
-
-    const initialState = {
-        ingredients: [],
-        bun: null,
-        items: [],
-        orderDetails: []
-    };
 
     const bun =  {_id: "string",
         type: "bun",

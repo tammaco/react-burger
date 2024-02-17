@@ -17,5 +17,6 @@ Cypress.Commands.add('prepareStore', () => {
   cy.intercept('GET', '*api/auth/user', { fixture: 'user.json' }).as('getUser');
   cy.intercept('POST', '*api/orders', { fixture: 'order.json' }).as('createOrder');
   cy.visit('/');
+  cy.getBySel('react-modals').as('reactModals');
 })
 

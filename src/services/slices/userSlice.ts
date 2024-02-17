@@ -6,7 +6,7 @@ interface IUserInitialState {
     isAuthChecked: boolean
 };
 
-const initialState: IUserInitialState = {
+export const initialState: IUserInitialState = {
     user: null,
     isAuthChecked: false
 };

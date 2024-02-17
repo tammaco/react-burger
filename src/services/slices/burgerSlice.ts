@@ -8,7 +8,7 @@ interface IConstructorInitialState {
     orderDetails: IOrderDetail[]
 };
 
-const initialState: IConstructorInitialState = {
+export const initialState: IConstructorInitialState = {
     ingredients: [],
     bun: null,
     items: [],
